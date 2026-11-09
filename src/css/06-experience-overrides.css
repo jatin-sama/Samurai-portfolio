@@ -1,0 +1,5 @@
+
+/* experience cards: always show the unsealed text */
+html body #tl li.xp.open .xl>li{opacity:1!important;transform:none!important;filter:none!important}
+html body #tl li.xp.open .xtags,html body #tl li.xp.open .xtags span{opacity:1!important}
+html body #tl li.xp.open .xbody{grid-template-rows:1fr!important}
