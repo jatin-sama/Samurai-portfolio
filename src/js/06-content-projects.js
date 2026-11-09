@@ -69,7 +69,7 @@ function openCase(p){var i=PROJECTS.indexOf(p);
 
 
 /* ===== Contact config: fill in to enable. Nothing is shown or sent until set. ===== */
-var CFG={email:'jamtin.dev@gmail.com',linkedin:'https://linkedin.com/in/jamtin-dev',github:'https://github.com/jatin-sama',instagram:'',youtube:'',resume:'',formEndpoint:'', /* social links: paste full profile URLs, e.g. 'https://github.com/yourname'. Empty = icon hidden. */
+var CFG={email:'jamtin.dev@gmail.com',linkedin:'https://linkedin.com/in/jamtin-dev',github:'https://github.com/jatin-sama',instagram:'',youtube:'',resume:'',formEndpoint:'https://api.web3forms.com/submit',web3formsKey:'c35d4859-f379-4a58-ab9f-4fdc4432bca5', /* social links: paste full profile URLs, e.g. 'https://github.com/yourname'. Empty = icon hidden. */
  timezone:'Asia/Kolkata',      /* IANA zone for the live clock, e.g. 'Europe/London'. Leave '' to hide the clock. */
  availability:'Open for freelance projects and full-time roles', /* e.g. 'Open for internships and freelance, replies within 24h' */
  closing:'Thanks for walking the whole road. Whatever you’re building, I’d like to hear about it.' /* your closing line */};
@@ -223,8 +223,8 @@ f.addEventListener('submit',function(e){e.preventDefault();status('');
  if(window.Finale)Finale.prime();
  busy(true);last=v;
  var ctl=window.AbortController?new AbortController():null,tm=setTimeout(function(){ctl&&ctl.abort()},15000);
- fetch(CFG.formEndpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(v),signal:ctl?ctl.signal:undefined})
- .then(function(r){if(!r.ok){var x=new Error('http');x.status=r.status;throw x}clearTimeout(tm);sent(v)})
+ fetch(CFG.formEndpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(CFG.web3formsKey?{access_key:CFG.web3formsKey,subject:'New message from '+v.name+' via jamtin.me',from_name:'JAMTIN Portfolio',name:v.name,email:v.email,message:v.message,botcheck:''}:v),signal:ctl?ctl.signal:undefined})
+ .then(function(r){return r.json().catch(function(){return {}}).then(function(d){if(!r.ok||d.success===false){var x=new Error('http');x.status=r.status;throw x}clearTimeout(tm);sent(v)})})
  .catch(function(err){clearTimeout(tm);busy(false);fail(v,err)})})
 })();
 /* ---- Router: hash-based, so links, back and forward behave natively ---- */

@@ -26,7 +26,7 @@ Cinematic WebGL portfolio (Three.js + GSAP from CDN). Plain HTML/CSS/JS, no fram
 `npm run build:single` and copy the new hash of dist-single/index.html into tests/baseline.sha256.
 
 ## Deploy (Vercel)
-Import the repo. Framework Preset: Other (vercel.json already sets the build command and the dist/ output). Add the jamtin.in domain.
+Import the repo. Framework Preset: Other (vercel.json already sets the build command and the dist/ output). Add the jamtin.me domain.
 
 ## Editing guide
 - Project cards, links and copy: src/js/06-content-projects.js

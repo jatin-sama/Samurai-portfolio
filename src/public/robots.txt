@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jamtin.in/sitemap.xml
+Sitemap: https://jamtin.me/sitemap.xml
