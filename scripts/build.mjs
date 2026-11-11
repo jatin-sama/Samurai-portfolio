@@ -39,6 +39,31 @@ const html = read('index.html').replace(/<!--@(css|js|data) (\S+?)((?:\s[^]*?)?)
   return single ? `<script${attrs}>${read(rel)}</script>` : `<script${attrs} src="${emitAsset(rel)}"></script>`;
 });
 
-fs.writeFileSync(path.join(outDir, 'index.html'), html);
+// Self-host Three.js / GSAP in the normal build (falls back to the CDN link if a download fails).
+const VENDOR_ORIGIN = process.env.VENDOR_ORIGIN || 'https://cdnjs.cloudflare.com';
+async function vendorize(input) {
+  const re = /(<script[^>]*\ssrc=")(https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/[^"]+)(")/g;
+  const found = [...new Set([...input.matchAll(re)].map((m) => m[2]))];
+  let out = input;
+  for (const url of found) {
+    const name = new URL(url).pathname.split('/').slice(3).join('-');
+    try {
+      const res = await fetch(url.replace('https://cdnjs.cloudflare.com', VENDOR_ORIGIN), { signal: AbortSignal.timeout(20000) });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const code = await res.text();
+      if (code.length < 20000 || code.trimStart().startsWith('<')) throw new Error('unexpected content');
+      fs.mkdirSync(path.join(outDir, 'vendor'), { recursive: true });
+      fs.writeFileSync(path.join(outDir, 'vendor', name), code);
+      out = out.split(url).join('/vendor/' + name);
+      console.log('vendored ' + name);
+    } catch (e) {
+      console.warn(`WARN could not self-host ${url} (${e.message}); keeping the CDN link`);
+    }
+  }
+  return out;
+}
+const finalHtml = single ? html : await vendorize(html);
+
+fs.writeFileSync(path.join(outDir, 'index.html'), finalHtml);
 fs.cpSync(path.join(src, 'public'), outDir, { recursive: true });
-console.log(`built ${path.relative(root, outDir)}/ (index.html ${(Buffer.byteLength(html) / 1e6).toFixed(2)} MB)`);
+console.log(`built ${path.relative(root, outDir)}/ (index.html ${(Buffer.byteLength(finalHtml) / 1e6).toFixed(2)} MB)`);

@@ -28,6 +28,14 @@ Cinematic WebGL portfolio (Three.js + GSAP from CDN). Plain HTML/CSS/JS, no fram
 ## Deploy (Vercel)
 Import the repo. Framework Preset: Other (vercel.json already sets the build command and the dist/ output). Add the jamtin.me domain.
 
+## Self-hosted libraries
+The normal build downloads Three.js and GSAP from cdnjs into dist/vendor/ and rewrites the script tags (cached for a year).
+If a download fails, the build prints a WARN line and keeps the CDN link, so a deploy never breaks. `--single` always keeps the CDN links.
+
+## Sound guide behaviour
+First visit: full intro. Returning visitors (stored in localStorage `jamtin_kg_seen`): a shorter, different line, lighter dim, auto-hides after 11 s.
+After 3 visits she no longer appears. Clear the key to test again.
+
 ## Editing guide
 - Project cards, links and copy: src/js/06-content-projects.js
 - Sound guide (fox): src/css/07-sound-guide.css and src/js/22-sound-guide.js, markup is in src/index.html (#kg)

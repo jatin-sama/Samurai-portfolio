@@ -1,11 +1,12 @@
 
-/* Kitsune guide: after the home intro ends, she points the visitor at the sound button. Shows once per visitor. */
+/* Kitsune guide: after the home intro ends, she points the visitor at the sound button. First visit: full intro. Returning visitors: a shorter, different line (lighter dim, auto-hides sooner). After 3 visits she stays away. */
 (function(){
 var KEY='jamtin_kg_seen',body=document.body,snd=document.getElementById('snd'),kg=document.getElementById('kg');
 if(!snd||!kg)return;
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,shown=false,done=false,timers=[],typeT=null,skipped=false;
-function seen(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
-function mark(){try{localStorage.setItem(KEY,'1')}catch(e){}}
+function state(){try{var v=localStorage.getItem(KEY);if(!v)return{n:0,a:0};if(v==='1')return{n:1,a:0};var o=JSON.parse(v);return{n:+o.n||0,a:o.a?1:0}}catch(e){return{n:0,a:0}}}
+var st=state(),returning=st.n>0,acc=false,marked=false;
+function mark(){if(marked)return;marked=true;try{localStorage.setItem(KEY,JSON.stringify({n:st.n+1,a:(acc||st.a)?1:0}))}catch(e){}}
 function soundOn(){return snd.getAttribute('aria-pressed')==='true'}
 function later(fn,ms){var t=setTimeout(fn,ms);timers.push(t);return t}
 var tx=document.getElementById('kgTx');
@@ -33,21 +34,23 @@ function onKey(e){if(e.key==='Escape'&&shown&&!done)decline()}
 function decline(){
  if(done)return;done=true;mark();timers.forEach(clearTimeout);
  document.removeEventListener('keydown',onKey);
- type('Very well\u2026 but you\u2019ll miss the best part.',function(){later(function(){done=false;finish()},1300)})}
+ type(returning?'As you wish\u2026':'Very well\u2026 but you\u2019ll miss the best part.',function(){later(function(){done=false;finish()},1300)})}
 function accepted(){
  if(done)return;timers.forEach(clearTimeout);clearInterval(typeT);tx.classList.remove('type');
- kg.classList.add('shut');bell();
- type('Mm\u2026 <b>perfect</b>. Listen well, and enjoy.',function(){later(finish,1400)})}
+ acc=true;kg.classList.add('shut');bell();
+ type(returning?'Mm\u2026 <b>welcome</b> back to the sound.':'Mm\u2026 <b>perfect</b>. Listen well, and enjoy.',function(){later(finish,1400)})}
 function show(){
- if(shown||seen()||soundOn())return;shown=true;
+ if(shown||st.n>=3||soundOn())return;shown=true;
+ if(returning)kg.classList.add('lite');
  kg.classList.add('on');body.classList.add('kg-on');
  requestAnimationFrame(function(){requestAnimationFrame(function(){kg.classList.add('in')})});
  document.addEventListener('keydown',onKey);
  later(function(){
+  if(returning){type(st.n>=2?(st.a?'You return once more. The <b>sound</b> awaits.':'Still silent? Let the <b>bells</b> speak this time.'):(st.a?'Welcome back, traveler\u2026 shall we turn the <b>sound</b> on again?':'Welcome back\u2026 the bells are still <b>waiting</b> for you.'));return}
   type('Psst\u2026 before you go further, <b>turn on the sound</b>.',function(){
    later(function(){type('The bells, the blades, the whispers: this place was made to be <b>heard</b>.')},700)})},900);
  if(!reduce){(function bl(){later(function(){if(done)return;if(!kg.classList.contains('shut')){kg.classList.add('blink');later(function(){kg.classList.remove('blink')},130)}bl()},3200+Math.random()*1600)})()}
- later(function(){if(!done)decline()},22000)}
+ later(function(){if(!done)decline()},returning?11000:22000)}
 snd.addEventListener('click',function(){if(!shown||done)return;setTimeout(function(){if(soundOn())accepted()},0)});
 document.getElementById('kgDim').addEventListener('click',decline);
 document.getElementById('kgLater').addEventListener('click',decline);

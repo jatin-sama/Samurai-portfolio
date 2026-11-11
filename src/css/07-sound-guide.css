@@ -40,5 +40,7 @@ body.kg-on #snd::after{content:"";position:absolute;inset:-6px;border:1px solid 
 @keyframes kgring{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.35);opacity:0}}
 body.kg-on #snd{filter:drop-shadow(0 0 10px rgba(224,52,63,.7))}
 @media (min-width:700px){#kg .kg-bub{width:21rem}#kg .kg-tx{font-size:1.05rem}}
+#kg.lite.on .kg-dim{opacity:.55}
+#kg.lite.out .kg-dim{opacity:0}
 @media (prefers-reduced-motion:reduce){#kg .kg-fig{animation:none}#kg .kg-girl,#kg .kg-bub,#kg .kg-dim{transition:opacity .4s ease!important;transform:none!important}
  body.kg-on #snd::after,#kg .kg-tap i{animation:none}#kg .kg-tx.type::after{animation:none}}
