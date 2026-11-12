@@ -204,7 +204,7 @@ function status(t,ok){stt.innerHTML=t?'<div class="fstat'+(ok?' ok':'')+'">'+t+'
 function mailHref(v){return 'mailto:'+CFG.email+'?subject='+encodeURIComponent('Message from '+v.name)+'&body='+encodeURIComponent(v.message+'\n\n— '+v.name+' ('+v.email+')')}
 function busy(b){btn.disabled=b;btn.textContent=b?'Sealing…':'Seal and send'}
 var last=null;
-function fail(v,err){
+function fail(v,err){try{window.JT&&JT.track('contact_fail',{v:String((err&&err.status)||(err&&err.name)||'net')})}catch(e){}
  var why=!navigator.onLine?'You seem to be offline.':(err&&err.name==='AbortError')?'The gate took too long to answer.':(err&&err.status===429)?'Too many letters just now. Please wait a moment.':'The server couldn’t take it just now.';
  status('<p><b>Your letter didn’t go through.</b> '+why+' Nothing is lost; your words are still on the page.</p><div class="acts"><button type="button" class="ghost" data-retry>Try again</button>'+(CFG.email?'<a class="ghost" href="'+esc(mailHref(v))+'">Email it instead</a><button type="button" class="ghost" data-copy>Copy email</button>':'')+'</div>',false)}
 stt.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-retry]')){status('');f.requestSubmit?f.requestSubmit():f.dispatchEvent(new Event('submit',{cancelable:true}))}});
@@ -213,8 +213,8 @@ function thanks(v){
  box.hidden=true;th.hidden=false;letter.classList.add('stamped');
  var h=$c('cth');h.focus({preventScroll:true});letter.scrollIntoView({block:'center',behavior:rm?'auto':'smooth'});
  $c('again').addEventListener('click',function(){f.reset();upd();status('');busy(false);letter.classList.remove('stamping','stamped','thud');th.hidden=true;box.hidden=false;f.message.focus({preventScroll:true})})}
-function sent(v){if(window.Finale&&!rm)Finale.stamp(letter,function(){thanks(v)});else thanks(v)}
-f.addEventListener('submit',function(e){e.preventDefault();status('');
+function sent(v){try{window.JT&&JT.track('contact_sent',{v:'ok'})}catch(e){}if(window.Finale&&!rm)Finale.stamp(letter,function(){thanks(v)});else thanks(v)}
+f.addEventListener('submit',function(e){e.preventDefault();status('');try{window.JT&&JT.track('contact_submit',{v:'attempt'})}catch(x){}
  var v={name:f.name.value.trim(),email:f.email.value.trim(),message:f.message.value.trim()};
  var b=[bad('message',v.message.length>=10?'':'Please write at least 10 characters.'),bad('name',v.name?'':'Please enter your name.'),bad('email',/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)?'':'Please enter a valid email address.')];
  if(b.some(Boolean)){var first=f.querySelector('[aria-invalid=true]');if(first)first.focus();return}

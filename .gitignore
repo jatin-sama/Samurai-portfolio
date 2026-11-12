@@ -1,5 +1,7 @@
 node_modules/
 dist/
+dist-split/
+dist-verify/
 dist-single/
 .vercel/
 .DS_Store
