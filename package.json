@@ -7,7 +7,7 @@
   "engines": { "node": ">=18" },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "build:split": "node scripts/build.mjs --split",
+    "build:single": "node scripts/build.mjs --single",
     "verify": "node scripts/verify.mjs",
     "dev": "node scripts/dev.mjs"
   }
