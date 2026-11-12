@@ -28,6 +28,11 @@ Cinematic WebGL portfolio (Three.js + GSAP from CDN). Plain HTML/CSS/JS, no fram
 ## Deploy (Vercel)
 Import the repo. Framework Preset: Other (vercel.json already sets the build command and the dist/ output). Add the jamtin.me domain.
 
+## Model payloads
+In the normal build each `src/data/*.b64` payload becomes `assets/data/<name>.<hash>.js`. The placeholder `<script type="text/plain" id="...">` stays where it was and a
+parser-blocking script right after it fills in the identical text, so every consumer sees the same content at the same moment. index.html is ~0.4 MB instead of 23.5 MB.
+Files download in parallel and are cached for a year. Flags: `--inline-data` keeps payloads inside index.html; `--single` inlines everything (used by `npm run verify`).
+
 ## Self-hosted libraries
 The normal build downloads Three.js and GSAP from cdnjs into dist/vendor/ and rewrites the script tags (cached for a year).
 If a download fails, the build prints a WARN line and keeps the CDN link, so a deploy never breaks. `--single` always keeps the CDN links.
@@ -35,6 +40,11 @@ If a download fails, the build prints a WARN line and keeps the CDN link, so a d
 ## Sound guide behaviour
 First visit: full intro. Returning visitors (stored in localStorage `jamtin_kg_seen`): a shorter, different line, lighter dim, auto-hides after 11 s.
 After 3 visits she no longer appears. Clear the key to test again.
+
+## Polish layer
+`src/css/08-polish.css` + `src/js/23-polish.js`: custom cursor (fine pointers only; states link, hold, drag, text; touch gets a tap ripple), magnetic buttons,
+press and focus feedback, hover/click sounds through JSND (only while sound is on), and a slow-breathing ember/moon glow (`#kglow`). Vignette and grain already existed (`.vig`, `#fx`).
+Remove the `08`/`23` markers in `src/index.html` (and the `#kglow`/`#kc` elements) to switch it all off.
 
 ## Editing guide
 - Project cards, links and copy: src/js/06-content-projects.js

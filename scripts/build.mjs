@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const src = path.join(root, 'src');
 const single = process.argv.includes('--single');
+const inlineData = single || process.argv.includes('--inline-data'); // --inline-data: keep the model payloads inside index.html
 const outDir = path.join(root, single ? 'dist-single' : 'dist');
 
 // Kept inline in the normal build: critical first-paint CSS for the loader.
@@ -30,7 +31,18 @@ function emitAsset(rel) {
 }
 
 const html = read('index.html').replace(/<!--@(css|js|data) (\S+?)((?:\s[^]*?)?)-->/g, (_, kind, rel, attrs) => {
-  if (kind === 'data') return `<script type="text/plain"${attrs}>${read(rel)}</script>`;
+  if (kind === 'data') {
+    if (inlineData) return `<script type="text/plain"${attrs}>${read(rel)}</script>`;
+    // External payload: the placeholder element stays exactly where it was, and a parser-blocking script that
+    // follows it fills in the same text before any later script runs. Consumers see identical content at identical time.
+    const id = /id="(\w+)"/.exec(attrs)[1];
+    const code = `document.getElementById(${JSON.stringify(id)}).textContent=${JSON.stringify(read(rel))};`;
+    const { name } = path.parse(rel);
+    const file = `assets/data/${name}.${hash(code)}.js`;
+    fs.mkdirSync(path.join(outDir, 'assets/data'), { recursive: true });
+    fs.writeFileSync(path.join(outDir, file), code);
+    return `<script type="text/plain"${attrs}></script><script src="/${file}"></script>`;
+  }
   if (kind === 'css') {
     return single || INLINE_CSS.has(rel)
       ? `<style${attrs}>${read(rel)}</style>`
