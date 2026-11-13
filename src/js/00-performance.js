@@ -33,7 +33,7 @@ function decide(){
  dts.sort(function(a,b){return a-b});
  var p25=dts[Math.floor(dts.length*.25)]||16.7,hz=1000/p25;
  log('display about',Math.round(hz),'Hz');
- if(hz>=100){var n=Math.max(2,Math.round(hz/72));minInt=(n-.5)*1000/hz;limit=true;log('frame limiter on: scene runs every',n,'frames (~'+Math.round(hz/n)+' fps)');track('perf_limiter',{v:Math.round(hz)+'hz'})}}
+ if(hz>=100&&!/[?&](nolimit|noperf)\b/.test(location.search)){var n=Math.max(2,Math.round(hz/72));minInt=(n-.5)*1000/hz;limit=true;log('frame limiter on: scene runs every',n,'frames (~'+Math.round(hz/n)+' fps)');track('perf_limiter',{v:Math.round(hz)+'hz'})}}
 nRAF(measure);
 
 /* ---- 2. adaptive resolution ---- */
@@ -61,7 +61,7 @@ function watch(t){
  nRAF(watch)}
 function start(){if(started)return;started=true;setTimeout(function(){wStart=0;nRAF(watch)},2500)}
 function arm(){
- if(root.classList.contains('nofx'))return;
+ if(root.classList.contains('nofx')||/[?&]noperf\b/.test(location.search))return;
  if(d.body.classList.contains('ui-in'))return start();
  var mo=new MutationObserver(function(){if(d.body.classList.contains('ui-in')){mo.disconnect();start()}});
  mo.observe(d.body,{attributes:true,attributeFilter:['class']})}

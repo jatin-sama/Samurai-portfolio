@@ -66,6 +66,11 @@ Cookieless, no personal data, provider-agnostic (`src/js/00-analytics.js`). Off 
 - If a browser lacks WebGL or decompression support the site falls back gracefully (plain page / classic slash instead of the scythe cinematic).
 - Build id: `document.querySelector('meta[name=jt-build]').content` in the console should print `inline-2026-11-13` on the live site. If it prints nothing or a different value, an older deploy is live.
 
+## Diagnostics
+Open the live site with `?diag` to get an on-screen report (GPU name and whether it is software rendering, refresh rate, live fps, reduced-motion, library/feature checks, recent console warnings) with a Copy button.
+Test switches, combinable: `&pr=1` (force 3D resolution), `&noperf` (disable frame cap and auto quality), `&nolimit`, `&noglow`, `&nocursor`. Example: `jamtin.me/?diag&pr=1`.
+Nothing runs for normal visitors.
+
 ## Editing guide
 - Project cards, links and copy: src/js/06-content-projects.js
 - Sound guide (fox): src/css/07-sound-guide.css and src/js/22-sound-guide.js, markup is in src/index.html (#kg)
