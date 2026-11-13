@@ -3,7 +3,7 @@ name: Unpack project
 on:
   push:
     branches: [main]
-    paths: ['jamtin-project.zip']
+    paths: ['jamtin-project-fixed.zip']
   workflow_dispatch:
 
 permissions:
