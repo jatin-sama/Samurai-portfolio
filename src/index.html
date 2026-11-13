@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="jt-build" content="inline-2026-11-13">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jamtin (Jatin Patle) — Product Designer &amp; Full-Stack Developer</title>
 <!--@css css/01-loader.css id="ldr-css"-->
@@ -39,6 +40,9 @@
  <span class="sr" role="status" aria-live="polite" id="ldrS">Loading</span>
 </div>
 </div>
+<!--@analytics-->
+<!--@js js/00-analytics.js-->
+<!--@js js/00-performance.js-->
 <!--@js js/01-loader.js-->
 <noscript><p style="position:relative;z-index:9;padding:2rem;font-family:sans-serif">JAMTIN — Product Designer · Full-Stack Developer. This portfolio needs JavaScript to run.</p></noscript>
 <canvas id="c" aria-hidden="true"></canvas>
@@ -199,7 +203,11 @@
 <div id="fx"></div><div class="lbx" id="lb1"></div><div class="lbx" id="lb2"></div><div id="card" aria-hidden="true"><b></b><i></i><em></em></div><canvas id="trail"></canvas><button id="snd" type="button" aria-label="Toggle sound" aria-pressed="false"><svg viewBox="0 0 56 40" aria-hidden="true"><path class="sf" d="M9 1h38l8 19-8 19H9L1 20z"/><g class="sb"><rect x="14.5" y="12" width="3" height="16" rx="1.5" style="--d:-.2s"/><rect x="20.5" y="12" width="3" height="16" rx="1.5" style="--d:-.65s"/><rect x="26.5" y="12" width="3" height="16" rx="1.5" style="--d:-.4s"/><rect x="32.5" y="12" width="3" height="16" rx="1.5" style="--d:-.9s"/><rect x="38.5" y="12" width="3" height="16" rx="1.5" style="--d:-.05s"/></g><path class="sx" d="M16 31 40 9"/></svg></button>
 <!--@data data/samurai.b64 id="samuraiData"-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>window.THREE||document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>')</script>
+<script>window.THREE||document.write('<script src="/vendor/three.min.js"><\/script>')</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>window.gsap||document.write('<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><\/script>')</script>
+<script>window.gsap||document.write('<script src="/vendor/gsap.min.js"><\/script>')</script>
 <!--@data data/torii-low.b64 id="toriiLowData"-->
 <!--@data data/torii-tex.b64 id="toriiTex"-->
 <!--@js js/02-model-torii.js-->
@@ -260,6 +268,8 @@
 
 
 <!--@css css/07-sound-guide.css id="kg-css"-->
+<!--@css css/08-polish.css-->
+<div id="kglow" aria-hidden="true"></div><div id="kc" aria-hidden="true"><i class="d"></i><i class="r"><b></b></i></div>
 
 <div id="kg">
  <div class="kg-dim" id="kgDim"></div>
@@ -269,5 +279,6 @@
 </div>
 
 <!--@js js/22-sound-guide.js id="kg-js"-->
+<!--@js js/23-polish.js-->
 </body>
 </html>

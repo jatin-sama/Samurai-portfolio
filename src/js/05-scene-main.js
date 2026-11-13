@@ -362,6 +362,7 @@ function resize(){var w=innerWidth,h=innerHeight,a=w/h;renderer.setSize(w,h,fals
  camera.fov=36+(1-Math.min(a,1))*14;endPos.z=a<1?8.6:8;camera.updateProjectionMatrix();
  var mx=-26*Math.min(1,Math.max(.18,a/1.78));moon.position.x=mx;moonGlow.position.x=mx;waterU.moon.value.set(mx,-110)}
 addEventListener('resize',resize);resize();
+window.__getPR=function(){return renderer.getPixelRatio()};window.__setPR=function(p){try{renderer.setPixelRatio(p);resize()}catch(e){}};
 
 var ptr={x:0,y:0},sm={x:0,y:0};
 addEventListener('pointermove',function(e){ptr.x=(e.clientX/innerWidth-.5)*2;ptr.y=(e.clientY/innerHeight-.5)*2},{passive:true});

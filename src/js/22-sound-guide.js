@@ -6,6 +6,7 @@ if(!snd||!kg)return;
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,shown=false,done=false,timers=[],typeT=null,skipped=false;
 function state(){try{var v=localStorage.getItem(KEY);if(!v)return{n:0,a:0};if(v==='1')return{n:1,a:0};var o=JSON.parse(v);return{n:+o.n||0,a:o.a?1:0}}catch(e){return{n:0,a:0}}}
 var st=state(),returning=st.n>0,acc=false,marked=false;
+function ev(n){try{window.JT&&JT.track(n,{v:returning?'return':'first'})}catch(e){}}
 function mark(){if(marked)return;marked=true;try{localStorage.setItem(KEY,JSON.stringify({n:st.n+1,a:(acc||st.a)?1:0}))}catch(e){}}
 function soundOn(){return snd.getAttribute('aria-pressed')==='true'}
 function later(fn,ms){var t=setTimeout(fn,ms);timers.push(t);return t}
@@ -32,15 +33,16 @@ function finish(){
  setTimeout(function(){kg.classList.remove('on','in','out','shut','blink');kg.style.display='none'},900)}
 function onKey(e){if(e.key==='Escape'&&shown&&!done)decline()}
 function decline(){
- if(done)return;done=true;mark();timers.forEach(clearTimeout);
+ if(done)return;done=true;ev('fox_decline');mark();timers.forEach(clearTimeout);
  document.removeEventListener('keydown',onKey);
  type(returning?'As you wish\u2026':'Very well\u2026 but you\u2019ll miss the best part.',function(){later(function(){done=false;finish()},1300)})}
 function accepted(){
  if(done)return;timers.forEach(clearTimeout);clearInterval(typeT);tx.classList.remove('type');
- acc=true;kg.classList.add('shut');bell();
+ acc=true;ev('fox_accept');kg.classList.add('shut');bell();
  type(returning?'Mm\u2026 <b>welcome</b> back to the sound.':'Mm\u2026 <b>perfect</b>. Listen well, and enjoy.',function(){later(finish,1400)})}
 function show(){
- if(shown||st.n>=3||soundOn())return;shown=true;
+ if(document.getElementById('ldr')){setTimeout(show,300);return}
+ if(shown||st.n>=3||soundOn())return;shown=true;ev('fox_shown');
  if(returning)kg.classList.add('lite');
  kg.classList.add('on');body.classList.add('kg-on');
  requestAnimationFrame(function(){requestAnimationFrame(function(){kg.classList.add('in')})});

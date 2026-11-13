@@ -1,13 +1,15 @@
 {
   "name": "jamtin-portfolio",
-  "version": "24.0.0",
+  "version": "25.0.0",
   "private": true,
   "type": "module",
   "description": "JAMTIN portfolio: cinematic WebGL single-page site",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "build:single": "node scripts/build.mjs --single",
+    "build:split": "node scripts/build.mjs --split",
     "verify": "node scripts/verify.mjs",
     "dev": "node scripts/dev.mjs"
   }
