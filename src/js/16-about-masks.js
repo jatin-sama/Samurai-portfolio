@@ -5,7 +5,7 @@ var panel=document.getElementById('about'),mk=document.getElementById('mk');
 if(!panel||!mk)return;
 /* ---- edit me: the short personal line shown on the final step ---- */
 var ABOUT={note:'Open to Product Design, Associate Product Manager, Full-Stack (MERN) Developer and Product Intern roles.'};
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,snd=document.getElementById('snd');
+var reduce=(window.__RM===true),snd=document.getElementById('snd');
 var $=function(id){return document.getElementById(id)};
 var tabs=[].slice.call(mk.querySelectorAll('.mk-tab')),pans=[].slice.call(mk.querySelectorAll('.mk-p')),stage=$('mkstage'),wm=$('mkwm'),back=$('mkback'),next=$('mknext'),hint=$('mkhint'),st=$('mkst');
 var STEPS=[

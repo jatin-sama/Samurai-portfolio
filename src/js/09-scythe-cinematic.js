@@ -14,7 +14,7 @@
 'use strict';
 var doc=document,body=doc.body,enter=doc.getElementById('enter');
 if(!enter)return;
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,
+var reduce=(window.__RM===true),
     coarse=matchMedia('(pointer: coarse)').matches,
     lite=(navigator.hardwareConcurrency||8)<=2;
 var DEG=Math.PI/180,FOV=32,Z0=10,SP0=-.07,SP1=1.06,NB=120,CUTB=.35;

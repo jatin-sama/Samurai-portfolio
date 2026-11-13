@@ -39,7 +39,7 @@ document.addEventListener('click',function(e){if(!enabled()||!ui(e))return;if(pe
 var lastHover=0;
 document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse'||!enabled())return;var t=ui(e);if(!t||t.contains(e.relatedTarget))return;var n=performance.now();if(n-lastHover<90)return;lastHover=n;play('hover')});
 /* haptics: light, rate-limited, respects reduced motion; every other vibrate() call also feeds the limiter */
-var HR=matchMedia('(prefers-reduced-motion: reduce)').matches,lastHap=0,_vb=navigator.vibrate?navigator.vibrate.bind(navigator):null;
+var HR=(window.__RM===true),lastHap=0,_vb=navigator.vibrate?navigator.vibrate.bind(navigator):null;
 if(_vb)navigator.vibrate=function(p){if(p!==0&&!(p&&p.length===1&&p[0]===0))lastHap=performance.now();return _vb(p)};
 function hap(p,gap){if(!_vb||HR)return;if(performance.now()-lastHap<(gap==null?60:gap))return;try{navigator.vibrate(p)}catch(e){}}
 window.HAP=hap;

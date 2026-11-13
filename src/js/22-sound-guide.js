@@ -3,7 +3,7 @@
 (function(){
 var KEY='jamtin_kg_seen',body=document.body,snd=document.getElementById('snd'),kg=document.getElementById('kg');
 if(!snd||!kg)return;
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,shown=false,done=false,timers=[],typeT=null,skipped=false;
+var reduce=(window.__RM===true),shown=false,done=false,timers=[],typeT=null,skipped=false;
 function state(){try{var v=localStorage.getItem(KEY);if(!v)return{n:0,a:0};if(v==='1')return{n:1,a:0};var o=JSON.parse(v);return{n:+o.n||0,a:o.a?1:0}}catch(e){return{n:0,a:0}}}
 var st=state(),returning=st.n>0,acc=false,marked=false;
 function ev(n){try{window.JT&&JT.track(n,{v:returning?'return':'first'})}catch(e){}}

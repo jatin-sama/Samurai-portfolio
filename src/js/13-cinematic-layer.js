@@ -1,7 +1,7 @@
 
 /* Cinematic layer: slash-trail input, chapter cards, synthesized sound */
 (function(){
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,body=document.body,card=document.getElementById('card');
+var reduce=(window.__RM===true),body=document.body,card=document.getElementById('card');
 /* chapter title cards */
 var CH={about:['壱','Chapter I','Behind the Mask'],projects:['弐','Chapter II','The Arsenal'],skills:['参','Chapter III','The Disciplines'],experience:['肆','Chapter IV','The Journey'],contact:['伍','Chapter V','The Final Gate']},last=null;
 function showChapter(c,under){card.children[0].textContent=c[0];card.children[1].textContent=c[1];card.children[2].textContent=c[2];

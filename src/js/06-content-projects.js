@@ -39,7 +39,7 @@ list.addEventListener('click',function(e){var r=e.target.closest('.row');if(r&&!
 list.addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('t')){e.preventDefault();select(+e.target.parentNode.dataset.i)}});
 list.addEventListener('focusin',function(e){var r=e.target.closest('.row');if(r)select(+r.dataset.i)});
 select(0);
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var reduce=(window.__RM===true);
 if(!reduce)$('#stage').addEventListener('pointermove',function(e){var b=this.getBoundingClientRect();card.style.setProperty('--rx',((e.clientX-b.left)/b.width-.5).toFixed(3));card.style.setProperty('--ry',((e.clientY-b.top)/b.height-.5).toFixed(3))});
 $('#stage').addEventListener('pointerleave',function(){card.style.setProperty('--rx',0);card.style.setProperty('--ry',0)});
 
@@ -88,7 +88,7 @@ EXP.forEach(function(x,k){var li=document.createElement('li');li.className='rv x
   (x.tags&&x.tags.length?'<div class="xtags">'+x.tags.map(function(g){return'<span>'+esc(g)+'</span>'}).join('')+'</div>':'')+'</div></div><span class="xslash" aria-hidden="true"></span></div>';
  tl.appendChild(li)});
 /* interaction: unseal on tap or when its lantern lights, spotlight + tilt, a flame that walks the path */
-try{var rm=matchMedia('(prefers-reduced-motion: reduce)').matches,fine=matchMedia('(hover:hover) and (pointer:fine)').matches&&!rm,bd=document.body;
+try{var rm=(window.__RM===true),fine=matchMedia('(hover:hover) and (pointer:fine)').matches&&!rm,bd=document.body;
 var xs=[].slice.call(tl.children).filter(function(e){return e.classList.contains('xp')});
 var fill=document.createElement('span'),walk=document.createElement('span');
 fill.className='xfill';walk.className='xwalk';fill.setAttribute('aria-hidden','true');walk.setAttribute('aria-hidden','true');
@@ -126,7 +126,7 @@ setTimeout(function(){aim(cur)},300);
 })();
 /* ===== Finale: contact lanterns, status, sealed letter ===== */
 (function(){
-var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var rm=(window.__RM===true);
 var fine=matchMedia('(hover:hover) and (pointer:fine)').matches&&!rm;
 var $c=function(s){return document.getElementById(s)};
 var MAX=600,sec=$c('contact');

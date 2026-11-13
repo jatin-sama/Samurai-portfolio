@@ -9,7 +9,7 @@ const $=id=>document.getElementById(id);
 const skipBtn=$('pbskip'),listEl=panel.querySelector('.pb-list');
 skipBtn.onclick=()=>panel.scrollTo({top:track.offsetHeight,behavior:'smooth'});
 if(!T||!cv||!PR.length){panel.classList.add('pb-nogl');return}
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,snd=$('snd');
+const reduce=(window.__RM===true),snd=$('snd');
 const info=$('pbinfo'),intro=$('pbintro'),outro=$('pbouts'),fade=$('pbfade'),ticks=$('pbticks'),hint=$('pbhint'),goBtn=$('pbgo');
 const GLY={digistall:'店',poha:'食',cosdvl:'美',tap2bill:'払',edge:'道',truthpulse:'真'};
 const ACC=['#e0343f','#5b8def','#e0a84a','#2fb7a3','#9a74ea','#e8567a'];

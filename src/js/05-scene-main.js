@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 var $=function(s){return document.querySelector(s)};
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var reduce=(window.__RM===true);
 var coarse=matchMedia('(pointer: coarse)').matches;
 var body=document.body, veil=$('#veil'), toastEl=$('#toast');
 $('#hint').textContent=coarse?'Drag to look around':'Move to look around';
@@ -430,7 +430,7 @@ function frame(now){
   dum.position.set(d.x,d.y,d.z);dum.rotation.set(clk*d.rx*1.4+d.ph,clk*d.ry*1.2,clk*d.rz);dum.updateMatrix();leaves.setMatrixAt(i,dum.matrix)}
  leaves.instanceMatrix.needsUpdate=true;
  WX.update(dt);
- if(!pause&&!window.__heroHold)renderer.render(scene,camera);
+ if(!pause&&!window.__heroHold&&!window.__cov11&&!window.__cov14)renderer.render(scene,camera);
  if(t>=T&&!frame.done){frame.done=true;document.dispatchEvent(new CustomEvent('portfolio:hero-ready'))}
 }
 requestAnimationFrame(function(n){last=n;frame(n)});

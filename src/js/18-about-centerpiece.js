@@ -3,7 +3,7 @@
 (function(){
 var panel=document.getElementById('about'),cv=document.getElementById('ab3'),T=window.THREE;
 if(!panel||!cv||!T)return;
-var rm=matchMedia('(prefers-reduced-motion: reduce)').matches,coarse=matchMedia('(pointer:coarse)').matches;
+var rm=(window.__RM===true),coarse=matchMedia('(pointer:coarse)').matches;
 var GL=['技','美','匠','顔'],NM=['The Developer','The Designer','The Craftsman','Unmasked'],COL=[0x5b8def,0xe0a84a,0xe0343f,0xefe6d6];
 var HINT=['Move through it. Click to shatter. Drag to spin.','Move through it. Click to shatter. Drag to spin.','Move through it. Click to shatter. Drag to spin.','Click to reveal the name.'];
 var N=coarse?4200:7000,M=90,S=3.4,W=480,H=240,R,scene,cam,pts,pos,vel,col,base,tgt={},geo,mat,grp,on=false,raf=0,cur=0,form=0,tc=new T.Color(COL[0]),lt=0,t=0;

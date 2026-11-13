@@ -1,7 +1,7 @@
 
 /* Gate 4: throw shuriken at each seal to reveal skills, then defeat the ninja */
 (function(){
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,body=document.body;
+var reduce=(window.__RM===true),body=document.body;
 var sks=[].slice.call(document.querySelectorAll('#sk3-none')),left=sks.length,hp=3,ninja=null,hit=false,msg=document.querySelector('#sgate p');
 var NIN='<svg viewBox="0 0 120 170" aria-hidden="true"><path d="M72 36q32-4 46 14q-20-4-32 8z"/><ellipse cx="60" cy="30" rx="15" ry="17"/><path d="M44 50q16-9 32 0l9 44q-25 12-50 0z"/><path d="M78 56l24-26 5 5-22 31z"/><path d="M46 58l-20 24 7 6 21-17z"/><path d="M44 92l-28 54 12 7 26-42 8 42h13l-3-50z"/><path d="M72 96l32 42-9 9-36-38z"/><path d="M101 33L117 3l3 2-13 33z" fill="#dfe6f2"/><path d="M48 27h24l-3 7H51z" fill="#e0343f"/></svg>';
 function say(){msg.textContent=left>0?'Tap each seal to unlock a discipline ('+left+' left)':(hp>0?'Ambush! Tap the ninja ('+hp+' hits left)':'')}
@@ -24,7 +24,7 @@ if(location.hash==='#skills')body.classList.add('skv');
 })();
 /* Gate system: hold 2s -> slash -> next scene. window.Slash(cb) is reusable for every chapter. */
 (function(){
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,HOLD=2000;
+var reduce=(window.__RM===true),HOLD=2000;
 var sl=document.getElementById('slash'),body=document.body,busy=false;
 window.Slash=function(mid){
  if(busy)return;busy=true;sl.className='on';

@@ -3,7 +3,7 @@
 (function(){
 var mk=document.getElementById('mk');if(!mk)return;
 var st=document.getElementById('mkstage'),pans=[].slice.call(mk.querySelectorAll('.mk-p')),tabs=[].slice.call(mk.querySelectorAll('.mk-tab')),
-rm=matchMedia('(prefers-reduced-motion: reduce)').matches,last=-1;
+rm=(window.__RM===true),last=-1;
 function el(t,c){var e=document.createElement(t);e.className=c;e.setAttribute('aria-hidden','true');return e}
 var glow=el('span','mk-glow'),cv=el('canvas','mk-petals'),prog=el('div','mk-prog');
 prog.innerHTML='<b></b><b></b><b></b><b></b><em></em>';

@@ -6,7 +6,7 @@ document.getElementById('skgo').onclick=function(){window.Slash?Slash(function()
 document.getElementById('sk3skip').onclick=function(){panel.scrollTo({top:track.offsetHeight,behavior:'smooth'})};
 if(!T||!cv){panel.classList.add('nogl');return}
 var G=[].map.call(document.querySelectorAll('#groups .grp'),function(g){return{g:g.querySelector('h3').textContent,it:[].map.call(g.querySelectorAll('.sk'),function(b){return{n:b.querySelector('.nm').textContent,l:b.querySelectorAll('.lv i.on').length}})}});
-var INK='#efe6d6',RED='#e0343f',SERIF='"Cormorant Garamond","Hoefler Text",Georgia,serif',SANS='Jost,Arial,sans-serif',SP=7.5,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var INK='#efe6d6',RED='#e0343f',SERIF='"Cormorant Garamond","Hoefler Text",Georgia,serif',SANS='Jost,Arial,sans-serif',SP=7.5,reduce=(window.__RM===true);
 var r,sc,cam,hero,hm,ready=false,building=false,on=false,running=false,raf=0,t0=0,p=0,tp=0,mx=0,my=0,tx=0,ty=0,ox=.5,oy=.5,Z=0,marks=[],sv=new T.Vector2(),pv=new T.Vector2();
 var M=document.getElementById('sk3m'),B=document.getElementById('sk3b'),GL=document.getElementById('sk3g'),H=document.getElementById('sk3h').parentNode;
 function tex(w,h,fn){var c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'));var t=new T.CanvasTexture(c);t.anisotropy=4;return t}
@@ -61,10 +61,10 @@ function loop(now){raf=requestAnimationFrame(loop);var t=(now-t0)/1000;p+=(tp-p)
  var k=Math.round((p*Z-20)/SP);GL.textContent=p>.03&&k>=-1?marks[Math.max(0,Math.min(marks.length-1,k))]:'';
  M.textContent=Math.round(p*Z)+' m';B.style.width=(p*100)+'%';H.style.opacity=1-ss(0,.04,p);H.style.pointerEvents=p>.04?'none':'auto';
  r.render(sc,cam)}
-function run(){if(!ready||running)return;running=true;rs();sp();p=tp=0;t0=performance.now();cv.classList.add('on');raf=requestAnimationFrame(loop);panel.focus({preventScroll:true})}
+function run(){if(!ready||running)return;running=true;window.__cov14=true;rs();sp();p=tp=0;t0=performance.now();cv.classList.add('on');raf=requestAnimationFrame(loop);panel.focus({preventScroll:true})}
 function start(){if(ready){run();return}if(building)return;building=true;
  Promise.race([Promise.all([document.fonts.load('500 100px "Cormorant Garamond"'),document.fonts.load('600 100px "Cormorant Garamond"'),document.fonts.load('300 20px Jost')]),new Promise(function(s){setTimeout(s,1500)})]).then(function(){ready=build();building=false;if(ready&&on)run()})}
-function stop(){running=false;cancelAnimationFrame(raf);cv.classList.remove('on')}
+function stop(){running=false;window.__cov14=false;cancelAnimationFrame(raf);cv.classList.remove('on')}
 document.addEventListener('portfolio:view',function(e){var now=e.detail.id==='skills'&&!e.detail.cs;if(now===on)return;on=now;if(on)start();else stop()});
 if(panel.classList.contains('on')){on=true;start()}
 })();

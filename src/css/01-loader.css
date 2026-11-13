@@ -50,4 +50,7 @@
 @keyframes ldrMi{from{transform:translateX(-4%)}to{transform:translateX(4%)}}
 @keyframes ldrPt{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:.85}50%{transform:translate(calc(var(--dx)*.5),55vh) rotate(180deg)}100%{opacity:0;transform:translate(var(--dx),112vh) rotate(380deg)}}
 @keyframes ldrGl{0%{filter:brightness(1)}45%{filter:brightness(2.4) drop-shadow(0 0 12px #e0343f)}100%{filter:brightness(1)}}
-@media (prefers-reduced-motion:reduce){#ldr .grain,#ldr .pts,#ldr .mist,#ldr .core,#ldr .wv,#ldr::before,#ldr::after,#ldr.done .pr,#ldr.done .core,#ldr.done .blade{animation:none}#ldr::before,#ldr::after{height:7vh}#ldr,#ldr *{transition-duration:.01s!important}}
+/* reduced motion: opt-in only (?reduce=1), see head script */
+html.rm #ldr .grain,html.rm #ldr .pts,html.rm #ldr .mist,html.rm #ldr .core,html.rm #ldr .wv,html.rm #ldr::before,html.rm #ldr::after,html.rm #ldr.done .pr,html.rm #ldr.done .core,html.rm #ldr.done .blade{animation:none}
+html.rm #ldr::before,html.rm #ldr::after{height:7vh}
+html.rm #ldr,html.rm #ldr *{transition-duration:.01s!important}

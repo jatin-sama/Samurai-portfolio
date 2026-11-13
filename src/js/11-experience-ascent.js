@@ -4,7 +4,7 @@
 (function(){
 var body=document.body,panel=document.getElementById('experience'),cv=document.getElementById('x3');
 if(!panel||!cv||!window.THREE||!window.__torii||!window.__lanternGeo)return;
-if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+if((window.__RM===true))return;
 var T=window.THREE,S=null,running=false,failed=false,px=0,py=0,hudCh='';
 var CAMMAX=.9;
 function on(){return body.classList.contains('jv')&&!body.classList.contains('jdone')}
@@ -99,9 +99,9 @@ function frame(now){
  S.R.render(S.scene,S.cam)}
 function activate(){
  if(failed||!on())return;
- try{if(!S)init();body.classList.add('x3d');size();if(!running){running=true;S.last=performance.now();requestAnimationFrame(frame)}}
- catch(e){failed=true;body.classList.remove('x3d');running=false;try{console.error('Ascent unavailable, using scroll cards',e)}catch(x){}}}
-document.addEventListener('portfolio:view',function(e){if(e.detail&&e.detail.id==='experience')setTimeout(activate,0);else running=false});
+ try{if(!S)init();body.classList.add('x3d');size();if(!running){running=true;S.last=performance.now();requestAnimationFrame(frame)}window.__cov11=true}
+ catch(e){failed=true;window.__cov11=false;body.classList.remove('x3d');running=false;try{console.error('Ascent unavailable, using scroll cards',e)}catch(x){}}}
+document.addEventListener('portfolio:view',function(e){if(e.detail&&e.detail.id==='experience')setTimeout(activate,0);else{running=false;window.__cov11=false}});
 if(location.hash==='#experience')setTimeout(activate,60);
 addEventListener('resize',size);
 panel.addEventListener('pointermove',function(e){px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5});

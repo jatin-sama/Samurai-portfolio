@@ -36,11 +36,11 @@ html.kc-on #kc.away,html.kc-on #kc.is-text{opacity:0}
 @keyframes kgfade{to{opacity:.8}}
 @keyframes kgbreath{0%,100%{opacity:.8}50%{opacity:1}}
 .fx-off #kglow,.nofx #kglow{display:none}
-@media (prefers-reduced-motion:reduce){
- .ui-in #kglow{animation:none;opacity:.85}
- #kc .r,#kc .r b{transition:none}
- .kc-rip{animation-duration:.01s}
-}
+/* reduced motion: opt-in only (?reduce=1), see head script */
+html.rm .ui-in #kglow{animation:none;opacity:.85}
+html.rm #kc .r,html.rm #kc .r b{transition:none}
+html.rm .kc-rip{animation-duration:.01s}
+
 
 /* ---- low-performance mode (set by 00-performance.js when the frame rate stays low) ---- */
 .perf-low #kglow{display:none}

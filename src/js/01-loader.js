@@ -3,7 +3,7 @@
 'use strict';
 var L=document.getElementById('ldr');if(!L)return;
 var doc=document,root=doc.documentElement,body=doc.body,T0=performance.now();
-var reduce=false;try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+var reduce=false;try{reduce=(window.__RM===true)}catch(e){}
 var fast=false;try{fast=!!sessionStorage.getItem('jt_ldr')||(location.hash&&location.hash!=='#top'&&location.hash!=='#')}catch(e){}
 window.__ldrHold=true;setTimeout(function(){window.__ldrHold=false},30000);
 (function(){var h='',i;for(i=0;i<11;i++)h+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--s:'+(5+Math.random()*5).toFixed(1)+'px;--t:'+(7+Math.random()*6).toFixed(1)+'s;--l:-'+(Math.random()*12).toFixed(1)+'s;--dx:'+((Math.random()-.3)*220).toFixed(0)+'px"></i>';L.querySelector('.pts').innerHTML=h})();

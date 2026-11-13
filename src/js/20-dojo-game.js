@@ -3,7 +3,7 @@
 'use strict';
 var O=document.getElementById('dojo'),opener=document.getElementById('dojoOpen');if(!O||!opener)return;
 var cv=document.getElementById('dgCv'),cx=cv.getContext('2d'),$=function(i){return document.getElementById(i)};
-var reduce=false;try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+var reduce=false;try{reduce=(window.__RM===true)}catch(e){}
 /* ---------- songs: public-domain melodies and one original ---------- */
 var NT={C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11};
 function midi(n){var m=/^([A-G][#b]?)(\d)$/.exec(n);return NT[m[1]]+(+m[2]+1)*12}

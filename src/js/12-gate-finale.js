@@ -1,7 +1,7 @@
 
 /* Gate 6 / Finale: hold 2s -> seam flares -> doors part -> red light floods -> letter rises. */
 (function(){
-var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,body=document.body,root=document.documentElement,btn=document.getElementById('copen'),snd=document.getElementById('snd');
+var reduce=(window.__RM===true),body=document.body,root=document.documentElement,btn=document.getElementById('copen'),snd=document.getElementById('snd');
 function opened(){return body.classList.contains('copen')}
 /* sound (only when the #snd toggle is on) */
 /* embers + scene glow engine (runs only while Contact is on screen) */

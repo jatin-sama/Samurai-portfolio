@@ -53,7 +53,7 @@ function lines(){
   ['display rate','~'+hz+' Hz, slowest recent frame ~'+worst+' fps'],
   ['frame cap',w.__perf?(w.__perf.limited()?'ON':'off')+', quality level '+w.__perf.level():'n/a'],
   ['cpu / ram',(navigator.hardwareConcurrency||'?')+' threads / '+(navigator.deviceMemory||'?')+' GB'],
-  ['reduced motion',matchMedia('(prefers-reduced-motion: reduce)').matches?'YES (many animations are skipped!)':'no'],
+  ['reduced motion',(matchMedia('(prefers-reduced-motion: reduce)').matches?'OS says reduce (ignored unless ?reduce=1)':'OS: no')+' / site reduced mode: '+(w.__RM?'ON':'off')],
   ['THREE / gsap',(!!w.THREE)+' / '+(!!w.gsap)],
   ['decompression',typeof w.DecompressionStream==='function'?'ok':'MISSING'],
   ['no-3D mode',d.documentElement.classList.contains('nofx')?'YES':'no'],

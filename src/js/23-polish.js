@@ -3,7 +3,7 @@
 'use strict';
 var d=document,root=d.documentElement,
  fine=matchMedia('(hover:hover) and (pointer:fine)').matches&&!!(window.CSS&&CSS.supports&&CSS.supports('translate','1px 1px')),
- reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ reduce=(window.__RM===true);
 
 /* ---------- sound feedback (JSND only plays while the SND toggle is on) ---------- */
 var SND='.nav a.l,.seal,.cta,.btn:not(.hold),#pbticks a,#pbticks button',lastS=0,hovEl=null;
