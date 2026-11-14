@@ -12,24 +12,24 @@
 #dojo .dg-menu[hidden],#dojo .dg-pop[hidden]{display:none}
 #dojo .in{margin:auto;display:flex;flex-direction:column;align-items:center;gap:1rem;width:min(100%,780px)}
 #dojo h2{font:500 clamp(2rem,6vmin,3.2rem)/1.1 'Cormorant Garamond','Hoefler Text',Georgia,serif;letter-spacing:.14em;text-indent:.14em}
-#dojo .s{font:300 .8rem/1.7 'Jost',sans-serif;letter-spacing:.06em;color:rgba(239,230,214,.62);max-width:34rem}
+#dojo .s{font:300 .8rem/1.7 'Jost',sans-serif;letter-spacing:.06em;color:rgba(239,230,214,.86);max-width:34rem}
 #dojo .rule{width:3.2rem;height:1px;background:#e0343f}
 #dgList{list-style:none;padding:0;margin:.4rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem;width:100%}
 #dojo .sg{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;width:100%;padding:1rem 1.1rem;background:rgba(239,230,214,.04);border:1px solid rgba(239,230,214,.16);color:#efe6d6;text-align:left;cursor:pointer;transition:border-color .3s,background .3s,transform .3s}
 #dojo .sg:hover,#dojo .sg:focus-visible{border-color:#e0343f;background:rgba(224,52,63,.1);transform:translateY(-2px)}
 #dojo .sg b{font:500 1.4rem/1.15 'Cormorant Garamond','Hoefler Text',Georgia,serif;letter-spacing:.04em}
-#dojo .sg i{font:300 .66rem 'Jost',sans-serif;font-style:normal;letter-spacing:.18em;text-transform:uppercase;color:rgba(239,230,214,.58)}
-#dojo .sg span{display:flex;justify-content:space-between;width:100%;margin-top:.3rem;font:400 .64rem 'Jost',sans-serif;letter-spacing:.2em;text-transform:uppercase}
+#dojo .sg i{font:300 .76rem 'Jost',sans-serif;font-style:normal;letter-spacing:.18em;text-transform:uppercase;color:rgba(239,230,214,.86)}
+#dojo .sg span{display:flex;justify-content:space-between;width:100%;margin-top:.3rem;font:400 .76rem 'Jost',sans-serif;letter-spacing:.2em;text-transform:uppercase}
 #dojo .sg em{font-style:normal;color:#e0343f}
-#dojo .sg u{text-decoration:none;color:rgba(239,230,214,.55)}
-#dojo .k{font:300 .66rem 'Jost',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(239,230,214,.4)}
+#dojo .sg u{text-decoration:none;color:rgba(239,230,214,.86)}
+#dojo .k{font:300 .76rem 'Jost',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(239,230,214,.86)}
 #dojo .gr{font:500 clamp(4.4rem,16vmin,7rem)/1 'Cormorant Garamond','Hoefler Text',Georgia,serif;color:#efe6d6;text-shadow:0 0 40px rgba(224,52,63,.6)}
-#dojo .st{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem 2rem;font:300 .8rem 'Jost',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(239,230,214,.7)}
+#dojo .st{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem 2rem;font:300 .8rem 'Jost',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(239,230,214,.86)}
 #dojo .st b{display:block;font:500 1.5rem 'Cormorant Garamond',Georgia,serif;letter-spacing:.06em;color:#efe6d6}
 #dojo .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1rem;margin-top:.4rem}
 #dojo .bt{min-height:48px;padding:.8rem 1.6rem;background:none;border:1px solid rgba(239,230,214,.3);color:#efe6d6;font:400 .72rem 'Jost',sans-serif;letter-spacing:.32em;text-indent:.32em;text-transform:uppercase;cursor:pointer;transition:border-color .3s,box-shadow .3s,background .3s}
 #dojo .bt:hover,#dojo .bt:focus-visible{border-color:#e0343f;background:rgba(224,52,63,.12);box-shadow:0 0 24px rgba(224,52,63,.25)}
-#dojo .bt.g{border-color:transparent;color:rgba(239,230,214,.6)}
+#dojo .bt.g{border-color:transparent;color:rgba(239,230,214,.86)}
 #dojo :focus-visible{outline:1px solid #e0343f;outline-offset:3px}
 .nav a.l#dojoOpen{color:#e0343f}
 .nav a.l#dojoOpen:hover{color:#ff6a6a}

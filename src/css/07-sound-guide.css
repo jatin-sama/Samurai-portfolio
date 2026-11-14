@@ -11,7 +11,7 @@
 #kg.out .kg-dim{opacity:0;transition:opacity .7s ease}
 #kg .kg-fig{position:relative;display:block;width:100%;aspect-ratio:560/613;animation:kgfloat 4.2s ease-in-out infinite}
 #kg .kg-fig{-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
-#kg .kg-fig img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+#kg .kg-fig img{filter:saturate(.86) contrast(1.07) brightness(.93) drop-shadow(0 8px 24px rgba(0,0,0,.7)) drop-shadow(0 0 16px rgba(224,52,63,.3));position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
 #kg .kg-fig .shut{opacity:0}
 #kg.shut .kg-fig .shut{opacity:1}
 #kg.blink .kg-fig .shut{opacity:1}
@@ -23,15 +23,15 @@
 #kg.in .kg-bub{opacity:1;transform:none}
 #kg.out .kg-bub{opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease}
 #kg .kg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#kg .kg-nm{display:block;font:400 .6rem var(--sans,system-ui);letter-spacing:.32em;text-transform:uppercase;color:var(--red-hi,#e0343f);margin-bottom:.5rem}
+#kg .kg-nm{display:block;font:400 .76rem var(--sans,system-ui);letter-spacing:.32em;text-transform:uppercase;color:var(--red-hi,#e0343f);margin-bottom:.5rem}
 #kg .kg-tx{font:300 .95rem/1.55 var(--serif,Georgia,serif);min-height:4.6em}
 #kg .kg-tx b{font-weight:500;color:var(--red-hi,#e0343f)}
 #kg .kg-tx.type::after{content:"";display:inline-block;width:.45ch;height:1em;margin-left:2px;vertical-align:-.12em;background:var(--red-hi,#e0343f);animation:kgcur .8s steps(1) infinite}
 @keyframes kgcur{50%{opacity:0}}
-#kg .kg-later{margin-top:.5rem;min-height:44px;padding:0 .2rem;background:none;border:0;color:rgba(239,230,214,.6);font:400 .64rem var(--sans,system-ui);letter-spacing:.24em;text-transform:uppercase;cursor:pointer;pointer-events:auto}
+#kg .kg-later{margin-top:.5rem;min-height:44px;padding:0 .2rem;background:none;border:0;color:rgba(239,230,214,.86);font:400 .76rem var(--sans,system-ui);letter-spacing:.24em;text-transform:uppercase;cursor:pointer;pointer-events:auto}
 #kg .kg-later:hover,#kg .kg-later:focus-visible{color:var(--paper,#efe6d6)}
 #kg .kg-tap{position:absolute;left:calc(1rem + 3.4rem + .7rem);bottom:calc(env(safe-area-inset-bottom,0px) + 1rem);height:2.5rem;display:flex;align-items:center;gap:.5rem;
- font:400 .66rem var(--sans,system-ui);letter-spacing:.3em;text-transform:uppercase;color:var(--red-hi,#e0343f);text-shadow:0 1px 12px #000;opacity:0;transition:opacity .5s ease 1s}
+ font:400 .76rem var(--sans,system-ui);letter-spacing:.3em;text-transform:uppercase;color:var(--red-hi,#e0343f);text-shadow:0 1px 12px #000;opacity:0;transition:opacity .5s ease 1s}
 #kg.in .kg-tap{opacity:1}
 #kg.out .kg-tap,#kg.shut .kg-tap{opacity:0;transition:opacity .3s}
 #kg .kg-tap i{font-style:normal;display:inline-block;animation:kgnudge 1.1s ease-in-out infinite}
@@ -47,3 +47,6 @@ html.rm #kg .kg-fig{animation:none}
 html.rm #kg .kg-girl,html.rm #kg .kg-bub,html.rm #kg .kg-dim{transition:opacity .4s ease!important;transform:none!important}
 html.rm body.kg-on #snd::after,html.rm #kg .kg-tap i{animation:none}
 html.rm #kg .kg-tx.type::after{animation:none}
+
+/* wide screens: float the guide bubble above her instead of beside her, so it never covers the hero title */
+@media (min-width:1100px){#kg .kg-bub{left:.8rem;bottom:calc(env(safe-area-inset-bottom,0px) + 3.9rem + 250px*1.095 + .6rem)}}

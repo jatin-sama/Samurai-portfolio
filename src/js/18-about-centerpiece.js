@@ -14,14 +14,14 @@ function init(){
  try{R=new T.WebGLRenderer({canvas:cv,alpha:true,antialias:false,powerPreference:'low-power'})}catch(e){return false}
  R.setPixelRatio(Math.min(devicePixelRatio||1,1.75));scene=new T.Scene();cam=new T.PerspectiveCamera(45,1,.1,50);cam.position.z=7;
  var map=sprite(),i;pos=new Float32Array(N*3);vel=new Float32Array(N*3);col=new Float32Array(N*3);base=new Float32Array(N);
- for(i=0;i<N;i++){var a=Math.random()*6.283,b=Math.acos(2*Math.random()-1),r=4+Math.random()*3;pos[i*3]=r*Math.sin(b)*Math.cos(a);pos[i*3+1]=r*Math.sin(b)*Math.sin(a);pos[i*3+2]=r*Math.cos(b)-2;base[i]=Math.random()<.06?1:.32+Math.random()*.4}
- pts=pointsOf(pos,{map:map,color:tc,size:.06,transparent:true,opacity:.92,depthWrite:false,blending:T.AdditiveBlending,vertexColors:true});
+ for(i=0;i<N;i++){var a=Math.random()*6.283,b=Math.acos(2*Math.random()-1),r=4+Math.random()*3;pos[i*3]=r*Math.sin(b)*Math.cos(a);pos[i*3+1]=r*Math.sin(b)*Math.sin(a);pos[i*3+2]=r*Math.cos(b)-2;base[i]=Math.random()<.08?1:.55+Math.random()*.4}
+ pts=pointsOf(pos,{map:map,color:tc,size:.072,transparent:true,opacity:.95,depthWrite:false,blending:T.AdditiveBlending,vertexColors:true});
  geo=pts.geometry;geo.setAttribute('color',new T.BufferAttribute(col,3));mat=pts.material;
  grp=new T.Group();grp.add(pts);scene.add(grp);
  ep=new Float32Array(M*3);el_=new Float32Array(M);for(i=0;i<M;i++)ep[i*3+1]=99;
  em=pointsOf(ep,{map:map,color:0xff7a3a,size:.07,transparent:true,opacity:.85,depthWrite:false,blending:T.AdditiveBlending});scene.add(em);
  dp=new Float32Array(260*3);for(i=0;i<260;i++){dp[i*3]=(Math.random()-.5)*16;dp[i*3+1]=(Math.random()-.5)*9;dp[i*3+2]=-3+Math.random()*5}
- dust=pointsOf(dp,{map:map,color:0xefe6d6,size:.035,transparent:true,opacity:.3,depthWrite:false,blending:T.AdditiveBlending});scene.add(dust);
+ dust=pointsOf(dp,{map:map,color:0xefe6d6,size:.04,transparent:true,opacity:.4,depthWrite:false,blending:T.AdditiveBlending});scene.add(dust);
  cap=document.createElement('p');cap.className='ab3-cap';cap.setAttribute('aria-hidden','true');cap.innerHTML='<b></b><span></span>';panel.appendChild(cap);
  resize();return true}
 function resize(){if(!R)return;var w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();

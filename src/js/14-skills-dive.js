@@ -6,7 +6,7 @@ document.getElementById('skgo').onclick=function(){window.Slash?Slash(function()
 document.getElementById('sk3skip').onclick=function(){panel.scrollTo({top:track.offsetHeight,behavior:'smooth'})};
 if(!T||!cv){panel.classList.add('nogl');return}
 var G=[].map.call(document.querySelectorAll('#groups .grp'),function(g){return{g:g.querySelector('h3').textContent,it:[].map.call(g.querySelectorAll('.sk'),function(b){return{n:b.querySelector('.nm').textContent,l:b.querySelectorAll('.lv i.on').length}})}});
-var INK='#efe6d6',RED='#e0343f',SERIF='"Cormorant Garamond","Hoefler Text",Georgia,serif',SANS='Jost,Arial,sans-serif',SP=7.5,reduce=(window.__RM===true);
+var INK='#efe6d6',RED='#e0343f',SERIF='"Cormorant Garamond","Hoefler Text",Georgia,serif',SANS='Jost,Arial,sans-serif',SP=10,reduce=(window.__RM===true);
 var r,sc,cam,hero,hm,ready=false,building=false,on=false,running=false,raf=0,t0=0,p=0,tp=0,mx=0,my=0,tx=0,ty=0,ox=.5,oy=.5,Z=0,marks=[],sv=new T.Vector2(),pv=new T.Vector2();
 var M=document.getElementById('sk3m'),B=document.getElementById('sk3b'),GL=document.getElementById('sk3g'),H=document.getElementById('sk3h').parentNode;
 function tex(w,h,fn){var c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'));var t=new T.CanvasTexture(c);t.anisotropy=4;return t}
@@ -15,7 +15,7 @@ function ls(c,v){try{c.letterSpacing=v}catch(e){}}
 function build(){
  try{r=new T.WebGLRenderer({canvas:cv,antialias:true})}catch(e){panel.classList.add('nogl');return false}
  r.setPixelRatio(Math.min(devicePixelRatio,2));r.setClearColor(0x05070b,1);
- sc=new T.Scene();sc.fog=new T.Fog(0x05070b,10,46);cam=new T.PerspectiveCamera(50,1,.1,200);cam.position.z=8;
+ sc=new T.Scene();sc.fog=new T.Fog(0x05070b,8,32);cam=new T.PerspectiveCamera(50,1,.1,200);cam.position.z=8;
  var ht=tex(2048,1024,function(c){c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.font='500 640px '+SERIF;ls(c,'-10px');c.fillText('Skills',1024,600);c.font='300 64px '+SANS;ls(c,'26px');c.fillText('The Disciplines',1024,150)});
  hm=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{tex:{value:ht},uM:{value:new T.Vector2(.5,.5)},uV:{value:new T.Vector2()},uT:{value:0},uP:{value:0},uR:{value:0},uFade:{value:1},uInk:{value:new T.Color(0xefe6d6)},uHot:{value:new T.Color(0xe0343f)},uCool:{value:new T.Color(0x8a93a3)}},
  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
@@ -43,7 +43,7 @@ function build(){
     if(two){c.fillText(two[0],512,64);if(two[1])c.fillText(two[1],512,64+fs*.92)}else c.fillText(s.n,512,110);
     for(var j=0;s.l&&j<5;j++){c.save();c.translate(512+(j-2)*56,262);c.rotate(Math.PI/4);if(j<s.l){c.fillStyle=RED;c.fillRect(-11,-11,22,22)}else{c.strokeStyle='rgba(239,230,214,.45)';c.lineWidth=3;c.strokeRect(-11,-11,22,22)}c.restore()}});
    var w=new T.Mesh(new T.PlaneGeometry(5.6,1.75),new T.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,side:2})),a=k*2.4,rad=3.4+(k%3)*.9;
-   w.position.set(Math.cos(a)*rad,Math.sin(a)*rad*.7,z2);w.lookAt(0,0,z2+7);w.rotateZ(Math.sin(k*3.1)*.3);sc.add(w);marks.push(gr.g);k++})});
+   w.position.set(Math.cos(a)*rad,Math.sin(a)*rad*.7,z2);w.lookAt(0,0,z2+7);w.rotateZ(Math.sin(k*3.1)*.1);sc.add(w);marks.push(gr.g);k++})});
  Z=12+k*SP+8;
  var n=1400,pa=new Float32Array(n*3);for(var i=0;i<n;i++){var a2=Math.random()*6.28,rd=2.5+Math.random()*14;pa[i*3]=Math.cos(a2)*rd;pa[i*3+1]=Math.sin(a2)*rd;pa[i*3+2]=10-Math.random()*(Z+20)}
  var pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(pa,3));sc.add(new T.Points(pg,new T.PointsMaterial({color:0xefe6d6,size:.06,transparent:true,opacity:.7})));
@@ -57,7 +57,7 @@ function loop(now){raf=requestAnimationFrame(loop);var t=(now-t0)/1000;p+=(tp-p)
  sv.x+=(pv.x-sv.x)*.18;sv.y+=(pv.y-sv.y)*.18;pv.multiplyScalar(.86);
  var u=hm.uniforms;u.uT.value=t;u.uM.value.set(ox,oy);u.uV.value.set(Math.max(-.25,Math.min(.25,sv.x)),Math.max(-.25,Math.min(.25,sv.y)));u.uP.value=p;u.uR.value=reduce?1:Math.min(1,t/2.4);u.uFade.value=1-ss(.015,.075,p);
  hero.rotation.y=mx*.28;hero.rotation.x=my*.16;
- cam.position.set(mx*1.1,-my*.8,8-p*Z);cam.rotation.set(my*.07,-mx*.1,-mx*.08+p*1.1);
+ cam.position.set(mx*1.1,-my*.8,8-p*Z);cam.rotation.set(my*.07,-mx*.1,-mx*.08+p*.5);
  var k=Math.round((p*Z-20)/SP);GL.textContent=p>.03&&k>=-1?marks[Math.max(0,Math.min(marks.length-1,k))]:'';
  M.textContent=Math.round(p*Z)+' m';B.style.width=(p*100)+'%';H.style.opacity=1-ss(0,.04,p);H.style.pointerEvents=p>.04?'none':'auto';
  r.render(sc,cam)}

@@ -5,7 +5,7 @@ var reduce=(window.__RM===true),body=document.body,card=document.getElementById(
 /* chapter title cards */
 var CH={about:['壱','Chapter I','Behind the Mask'],projects:['弐','Chapter II','The Arsenal'],skills:['参','Chapter III','The Disciplines'],experience:['肆','Chapter IV','The Journey'],contact:['伍','Chapter V','The Final Gate']},last=null;
 function showChapter(c,under){card.children[0].textContent=c[0];card.children[1].textContent=c[1];card.children[2].textContent=c[2];
- card.classList.remove('on','under');void card.offsetWidth;if(under)card.classList.add('under');card.classList.add('on');if(under)setTimeout(function(){body.classList.add('cine')},900);else body.classList.add('cine');setTimeout(function(){body.classList.remove('cine');card.classList.remove('on','under')},under?2800:2250)}
+ card.classList.remove('on','under');void card.offsetWidth;if(under)card.classList.add('under');card.classList.add('on');if(under)setTimeout(function(){body.classList.add('cine')},900);else body.classList.add('cine');setTimeout(function(){body.classList.remove('cine');card.classList.remove('on','under')},under?2300:1750)}
 /* chapter gate: the dark title card fades in FIRST, the new section is swapped in underneath it while it is fully covered, then the card lifts onto a ready section */
 var gating=false,gated=false;
 window.__chapterGate=function(id,cs,go){var c=CH[id];

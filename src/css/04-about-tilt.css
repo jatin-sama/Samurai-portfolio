@@ -7,7 +7,7 @@
 .mk-prog{display:flex;align-items:center;gap:.35rem;margin-bottom:1rem}
 .mk-prog b{flex:none;width:1.6rem;height:3px;background:rgba(239,230,214,.16);transition:background .4s,box-shadow .4s}
 .mk-prog b.on{background:var(--mc);box-shadow:0 0 10px var(--mc)}
-.mk-prog em{margin-left:auto;font:400 .6rem var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.mk-prog em{margin-left:auto;font:400 .76rem var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
 .mk-tab.ready i{animation:mkping 1.4s ease-out infinite;border-color:var(--c)}
 @keyframes mkping{0%{box-shadow:0 0 0 0 rgba(239,230,214,.7)}100%{box-shadow:0 0 0 .7rem rgba(239,230,214,0)}}
 .mk-chips li{transition:background .25s,color .25s,border-color .25s,transform .25s;cursor:default}
