@@ -12,5 +12,8 @@
     "build:split": "node scripts/build.mjs --split",
     "verify": "node scripts/verify.mjs",
     "dev": "node scripts/dev.mjs"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
   }
 }
