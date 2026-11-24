@@ -18,7 +18,7 @@ const noAnalytics = args.has('--no-analytics');
 const inline = args.has('--inline');
 const lean = !split && !inline;
 const outDir = path.join(root, split ? 'dist-split' : noAnalytics ? 'dist-verify' : inline ? 'dist-single' : 'dist');
-const LAZY = new Set(['data/oni.b64', 'data/oni-tex.b64', 'data/blood-moon.b64', 'data/castle.b64', 'data/castle-tex.b64']); // not needed on the home page
+const LAZY = new Set(['data/oni.b64', 'data/oni-tex.b64', 'data/blood-moon.b64']); // not needed on the home page
 
 const INLINE_CSS = new Set(['css/01-loader.css']); // split build only: critical first-paint CSS stays inline
 const read = (rel) => fs.readFileSync(path.join(src, rel), 'utf8');

@@ -228,7 +228,7 @@ f.addEventListener('submit',function(e){e.preventDefault();status('');try{window
  .catch(function(err){clearTimeout(tm);busy(false);fail(v,err)})})
 })();
 /* ---- Router: hash-based, so links, back and forward behave natively ---- */
-var VIEWS=['about','projects','experience','skills','contact'],NUM={top:1,about:2,projects:3,experience:4,skills:5,contact:6},prev=null,casePrev=false;
+var VIEWS=['about','projects','skills','experience','contact'],NUM={top:1,about:2,projects:3,skills:4,experience:5,contact:6},prev=null,casePrev=false;
 function route(){var hp=location.hash.slice(1).split('/'),hv=VIEWS.indexOf(hp[0])>-1?hp[0]:'top';
  if(prev!==null&&hv!==prev&&window.__chapterGate&&window.__chapterGate(hv,hv==='projects'&&!!hp[1],routeNow))return;
  routeNow()}
