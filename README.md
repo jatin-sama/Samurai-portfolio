@@ -96,3 +96,14 @@ The home page needs samurai, scythe, torii and lantern, so those four payloads a
 - First storm: one short phone vibration (once per visit, via `HAP`).
 - Hidden surprise: tap/click the moon on the home screen. It turns blood red for ~4 s (and calls a bolt during the storm). Tracked as `moon_egg`.
 - `src/public/404.html`: rainy page with a tap-for-lightning moon; respects reduced motion.
+
+## Story order (v26, castle)
+Hero, About, Projects (night bridge, castle reveal at ~85% scroll, the oni gate is the castle's closed outer gate), Experience (the gate opens; a red arched
+bridge, a covered wooden bridge and a short "what's next" bridge over the moat; camera rises to the keep door then climbs to the roof), Skills (the fall through
+the keep, floor by floor, to the red doors), Contact (the final gate). Chapter numbers: Experience III, Skills IV.
+- Page order lives in: `VIEWS`/`NUM` in `js/06-content-projects.js`, `CH` in `js/13-cinematic-layer.js`, the nav in `index.html`, and the hand-offs
+  (`finish()` in `js/10-gate-lanterns.js` -> #skills, `#skgo` in `js/14-skills-dive.js` -> #contact). Music is keyed by view name, so it follows the order automatically.
+- `js/04b-model-castle.js`: `window.__castle({glowMap,k})` -> Group. Data: `data/castle.b64` + `data/castle-tex.b64` (lazy, like the oni gate, ~0.84 MB total).
+  Rebuild the model from a GLB with `scripts/castle/1..3` (python3 + numpy + Pillow; vertex clustering that keeps UV islands, cell 0.015 -> 44k triangles).
+- Projects reveal: `reveal()` in `js/15-projects-crossing.js` (fog density, mist sprites, thunder, castle `look()`/`lights()`, moon rise). Tuning: `CASTLE_S/Y/Z`, `GS` (stop distance in front of the gate).
+- Experience: layout constants at the top of `js/11-experience-ascent.js` (`B1`, `B2`, `B3`, `CAST_*`); `KEY` maps the walk value to the camera path.
