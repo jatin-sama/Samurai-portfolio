@@ -1,4 +1,5 @@
 /* JT: tiny analytics layer. Provider-agnostic, no cookies of its own, no personal data.
+   Providers: vercel (Vercel Web Analytics, no id needed), umami, goatcounter, plausible, ga4.
    Provider comes from the build (analytics.config.json or ANALYTICS_* env vars) as window.__JT_ANALYTICS.
    Add ?jtdebug to any URL to log events to the console. Visit ?notrack=1 once to exclude your own browser (?notrack=0 undoes it). */
 (function(){
@@ -17,15 +18,17 @@ function dispatch(n,p){
   else if(P==='goatcounter'){if(w.goatcounter&&w.goatcounter.count)w.goatcounter.count({path:'event/'+n+(p&&p.v!=null?'/'+p.v:''),title:n,event:true});else return false}
   else if(P==='plausible'){w.plausible(n,{props:p})}
   else if(P==='ga4'){w.gtag('event',n,p)}
+  else if(P==='vercel'){w.va('event',{name:n,data:p})}
  }catch(e){}
  return true}
 function flush(){ready=true;while(q.length){var e=q.shift();dispatch(e[0],e[1])}}
 function loadProvider(){
- if(off||P==='none'||!cfg.id)return;
+ if(off||P==='none'||(!cfg.id&&P!=='vercel'))return;
  var s=d.createElement('script');s.async=true;
  if(P==='umami'){s.src=cfg.src||'https://cloud.umami.is/script.js';s.setAttribute('data-website-id',cfg.id);s.onload=flush}
  else if(P==='goatcounter'){s.src=cfg.src||'https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://'+cfg.id+'.goatcounter.com/count');s.onload=flush}
  else if(P==='plausible'){w.plausible=w.plausible||function(){(w.plausible.q=w.plausible.q||[]).push(arguments)};s.src=cfg.src||'https://plausible.io/js/script.js';s.setAttribute('data-domain',cfg.id);ready=true}
+ else if(P==='vercel'){w.va=w.va||function(){(w.vaq=w.vaq||[]).push(arguments)};s.defer=true;s.src=cfg.src||'/_vercel/insights/script.js';ready=true}
  else if(P==='ga4'){w.dataLayer=w.dataLayer||[];w.gtag=function(){w.dataLayer.push(arguments)};w.gtag('js',new Date());
   w.gtag('config',cfg.id,{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
   s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(cfg.id);ready=true}
@@ -36,7 +39,7 @@ function loadProvider(){
 function track(n,p){
  p=p||{};
  if(debug)try{console.log('[JT]',n,p)}catch(e){}
- if(off||P==='none'||!cfg.id)return;
+ if(off||P==='none'||(!cfg.id&&P!=='vercel'))return;
  if(ready){dispatch(n,p)}else if(q.length<60){q.push([n,p])}}
 function once(n,p,key){key=key||n;if(sent[key])return;sent[key]=1;track(n,p)}
 w.JT={track:track,once:once,bucket:bucket};

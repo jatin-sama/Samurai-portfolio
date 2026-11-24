@@ -178,13 +178,14 @@ var WX=(function(){
   var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(o),3));
   var grp=new THREE.Group();[[0xffffff,0,1],[0x86a4ff,.14,.5],[0x86a4ff,-.14,.5]].forEach(function(c){var m=new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:c[0],transparent:true,opacity:0,fog:false,depthWrite:false,blending:THREE.AdditiveBlending}));m.position.x=c[1];m.userData.k=c[2];m.frustumCulled=false;grp.add(m)});
   grp.userData.g=g;scene.add(grp);return grp}
- function strike(fd){var dist=fd==null?Math.random():fd,sheet=Math.random()<.25,bx=rnd(-10,10);if(sheet)dist=.6+dist*.4;
-  var S={t:0,bolt:sheet?null:makeBolt(bx),gx:bx,p:[{t0:0,a:1,tau:.09},{t0:.24,a:.55,tau:.13}]};glow.position.x=bx;strikes.push(S);try{document.dispatchEvent(new CustomEvent('jt:strike',{detail:{dist:dist}}))}catch(e){}
+ var sinceBlade=0,nextBlade=2+Math.floor(Math.random()*2);
+ function strike(fd,forceBlade){var dist=fd==null?Math.random():fd,blade=!!forceBlade;if(!blade&&++sinceBlade>=nextBlade){blade=true}if(blade){sinceBlade=0;nextBlade=2+Math.floor(Math.random()*2)}var sheet=Math.random()<.25,bx=rnd(-10,10);if(sheet)dist=.6+dist*.4;
+  var S={t:0,blade:blade,bolt:sheet?null:makeBolt(bx),gx:bx,p:[{t0:0,a:1,tau:.09},{t0:.24,a:.55,tau:.13}]};glow.position.x=bx;strikes.push(S);try{document.dispatchEvent(new CustomEvent('jt:strike',{detail:{dist:dist}}))}catch(e){}
   var delay=.3+dist*2.2,name=dist<.3?'thunder3':dist<.65?'thunder2':'thunder1';
   setTimeout(function(){if(window.JSND)JSND.play(name);if(dist<.35&&window.HAP)HAP([20,40,45],0)},delay*1000)}
  function env(S){var f=0;for(var i=0;i<S.p.length;i++){var p=S.p[i],u=S.t-p.t0;if(u>=0)f+=p.a*Math.min(1,u/.02)*Math.exp(-u/p.tau)}return Math.min(1,f)}
  document.addEventListener('portfolio:view',function(e){var d=e.detail||{};home=(d.id==='top'||d.id==='home'||!d.id)&&!d.cs});
- window.__wxStrike=function(d){if(w>.5)strike(d)};
+ window.__wxStrike=function(d){if(w>.5)strike(d,true)};
  return{update:function(dt){
   if(!on)return;
   if(home&&t>=T&&!pause&&!document.hidden){cyc+=dt;if(cyc>=PETAL_S+STORM_S)cyc-=PETAL_S+STORM_S}
@@ -202,10 +203,10 @@ var WX=(function(){
   for(var m=0;m<mist.length;m++)mist[m].material.opacity=mistO[m]*(1+1.1*w);
   /* lightning */
   if(inStorm&&w>.7&&cyc>=nextStrike&&cyc<PETAL_S+STORM_S-4){strike();nextStrike=cyc+rnd(5,11)}
-  var f=0;for(var i=strikes.length-1;i>=0;i--){var S=strikes[i];S.t+=dt;var v=env(S);if(v>f)f=v;
+  var f=0,fb=0;for(var i=strikes.length-1;i>=0;i--){var S=strikes[i];S.t+=dt;var v=env(S);if(v>f)f=v;if(S.blade&&v>fb)fb=v;
    if(S.bolt)S.bolt.children.forEach(function(c){c.material.opacity=Math.min(1,v*1.4)*c.userData.k});
    if(S.t>1.1){if(S.bolt){scene.remove(S.bolt);S.bolt.userData.g.dispose();S.bolt.children.forEach(function(c){c.material.dispose()})}strikes.splice(i,1)}}
-  fLight.intensity=1.7*f;fAmb.intensity=.55*f;glow.material.opacity=.5*f;window.__wxW=w;window.__bladeFlash=f}}
+  fLight.intensity=1.7*f;fAmb.intensity=.55*f;glow.material.opacity=.5*f;window.__wxW=w;window.__bladeFlash=fb}}
 })();
 
 /* ---- Ronin (TEMPORARY procedural prototype, not a finished model) ---- */
@@ -298,18 +299,17 @@ var HS=null;
 function buildHeroScythe(K){
  if(HS||!K||reduce)return;
  function shrink(t,sz,srgb){var c=document.createElement('canvas');c.width=c.height=sz;c.getContext('2d').drawImage(t.image,0,0,sz,sz);var n=new THREE.Texture(c);n.flipY=false;n.anisotropy=4;if(srgb)n.encoding=THREE.sRGBEncoding;n.needsUpdate=true;return n}
- var tB=shrink(K.tB,1024,true),tN=shrink(K.tN,512,false),tR=shrink(K.tR,512,false),tE=shrink(K.tE,512,true),U={uRv:{value:0},uRim:{value:.3}};
+ var tB=shrink(K.tB,1024,true),tN=shrink(K.tN,512,false),tR=shrink(K.tR,512,false),tE=shrink(K.tE,512,true),U={uRv:{value:0},uRim:{value:.3},uFl:{value:0}};
  var mat=new THREE.MeshStandardMaterial({map:tB,normalMap:tN,roughnessMap:tR,metalnessMap:tR,roughness:1,metalness:.5,emissive:new THREE.Color(1,.42,.16),emissiveMap:tE,emissiveIntensity:.5,side:THREE.DoubleSide});
- mat.onBeforeCompile=function(sh){sh.uniforms.uRv=U.uRv;sh.uniforms.uRim=U.uRim;
+ mat.onBeforeCompile=function(sh){sh.uniforms.uRv=U.uRv;sh.uniforms.uRim=U.uRim;sh.uniforms.uFl=U.uFl;
   sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vOP;').replace('#include <begin_vertex>','#include <begin_vertex>\nvOP=position;');
-  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vOP;uniform float uRv,uRim;\n'+K.NOISE)
+  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vOP;uniform float uRv,uRim,uFl;\n'+K.NOISE)
    .replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nfloat dsF=(1.0-clamp(vOP.y,0.,1.))*.8+nz3(vOP*14.)*.32;float dsE=uRv*1.15-dsF;if(dsE<0.0)discard;')
-   .replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\nfloat rimF=pow(1.0-clamp(abs(dot(normalize(normal),normalize(vViewPosition))),0.,1.),4.5);totalEmissiveRadiance+=vec3(1.,.1,.08)*rimF*uRim*.9;totalEmissiveRadiance+=vec3(1.,.38,.1)*(1.0-smoothstep(0.,.07,dsE))*1.6;')};
+   .replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\nfloat rimF=pow(1.0-clamp(abs(dot(normalize(normal),normalize(vViewPosition))),0.,1.),4.5);totalEmissiveRadiance+=vec3(1.,.1,.08)*rimF*uRim*.9;totalEmissiveRadiance+=vec3(1.,.38,.1)*(1.0-smoothstep(0.,.07,dsE))*1.6;\nfloat flE=pow(1.0-clamp(abs(dot(normalize(normal),normalize(vViewPosition))),0.,1.),2.2);float flB=pow(clamp(dot(normalize(normal),normalize(vec3(-.25,.6,-.75))),0.,1.),2.0);totalEmissiveRadiance+=vec3(.5,.66,1.)*(flE*1.05+flB*.85)*uFl*(.22+1.1*dot(diffuseColor.rgb,vec3(.333)));')};
  var gp=K.meta.grip,model=new THREE.Mesh(K.geo,mat);model.frustumCulled=false;model.position.set(-gp[0],-gp[1],-gp[2]);
  var rig=new THREE.Group();rig.rotation.order='ZYX';rig.add(model);rig.visible=false;scene.add(rig);
  var gt=glowTex('rgba(255,120,90,.9)','rgba(255,20,30,0)');
  var aura=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xff2a2a,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));aura.position.set(.2,.42,-.12);aura.scale.set(1.5,1.5,1);rig.add(aura);
- var glint=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex('rgba(255,255,255,1)','rgba(170,200,255,0)'),color:0xdce8ff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));glint.position.set(.12,.58,0);glint.scale.setScalar(.5);rig.add(glint);
  var eyes=(K.meta.eyes||[]).map(function(e){var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xff3322,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));sp.position.set(e[0]-gp[0],e[1]-gp[1],e[2]-gp[2]);sp.scale.setScalar(.0001);rig.add(sp);return sp});
  /* embers: the first NT stream from the samurai to the scythe (the tether), the rest drift up around the blade */
  var NP=coarse?30:46,NT=Math.round(NP*.65),pa=new Float32Array(NP*3),pc=new Float32Array(NP*3),pg=new THREE.BufferGeometry();
@@ -337,7 +337,7 @@ function buildHeroScythe(K){
   rig.rotation.set(0,-.55*(1-e)+.05*Math.sin(t*.5)*(1-e),.08+.12*e+.02*Math.sin(t*.9)*(1-e));
   rig.scale.setScalar(s);
   U.uRv.value=st.rv;U.uRim.value=.35+.85*e;mat.emissiveIntensity=(.45+1.25*e)*(.93+.07*Math.sin(t*23)*Math.sin(t*7));
-  var bf=window.__bladeFlash||0;if(bf>.01){mat.emissiveIntensity+=bf*1.5;U.uRim.value+=bf*1.1;glint.material.opacity=Math.min(1,bf*1.2);glint.scale.setScalar(.5+bf*.9)}else if(glint.material.opacity)glint.material.opacity=0;
+  U.uFl.value=window.__bladeFlash||0;
   aura.material.opacity=rvN*(.05+.22*e+.03*Math.sin(t*1.3));
   var es=.13*(.15+.9*e)*(1+.15*Math.sin(t*14));eyes.forEach(function(sp){sp.scale.setScalar(Math.max(.0001,es));sp.material.opacity=rvN*Math.min(1,.1+e*1.4)});
   /* embers */

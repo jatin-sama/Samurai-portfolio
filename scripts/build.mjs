@@ -42,7 +42,7 @@ try { A = { ...A, ...JSON.parse(fs.readFileSync(path.join(root, 'analytics.confi
 if (process.env.ANALYTICS_PROVIDER) A.provider = process.env.ANALYTICS_PROVIDER;
 if (process.env.ANALYTICS_ID) A.id = process.env.ANALYTICS_ID;
 if (process.env.ANALYTICS_SRC) A.src = process.env.ANALYTICS_SRC;
-const analyticsTag = !noAnalytics && A.provider !== 'none' && A.id
+const analyticsTag = !noAnalytics && A.provider !== 'none' && (A.id || A.provider === 'vercel')
   ? `<script>window.__JT_ANALYTICS=${JSON.stringify(A).replace(/</g, '\\u003c')}</script>` : '';
 if (!noAnalytics) console.log(analyticsTag ? `analytics: ${A.provider}` : 'analytics: off (set analytics.config.json or ANALYTICS_* env vars)');
 

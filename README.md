@@ -52,8 +52,9 @@ press and focus feedback, hover/click sounds through JSND (only while sound is o
 Remove the `08`/`23` markers in `src/index.html` (and the `#kglow`/`#kc` elements) to switch it all off.
 
 ## Analytics
-Cookieless, no personal data, provider-agnostic (`src/js/00-analytics.js`). Off until configured. Set it in `analytics.config.json` or with Vercel env vars
-`ANALYTICS_PROVIDER` (`umami` | `goatcounter` | `plausible` | `ga4`), `ANALYTICS_ID`, optional `ANALYTICS_SRC` (self-hosted script URL). Env vars win over the file.
+Cookieless, no personal data, provider-agnostic (`src/js/00-analytics.js`). Default: **Vercel Web Analytics** (`analytics.config.json` -> `"provider": "vercel"`; turn it on once in the Vercel dashboard: Project > Analytics > Enable, then redeploy). Change it in `analytics.config.json` or with Vercel env vars
+`ANALYTICS_PROVIDER` (`vercel` | `umami` | `goatcounter` | `plausible` | `ga4`), `ANALYTICS_ID`, optional `ANALYTICS_SRC` (self-hosted script URL). Env vars win over the file.
+- vercel: no ID needed; loads `/_vercel/insights/script.js` (only exists on Vercel; page views are free, custom events need a plan that includes them).
 - umami: ID = Website ID. goatcounter: ID = your code (the `xxx` in xxx.goatcounter.com). plausible: ID = domain. ga4: ID = `G-XXXXXXXXXX` (sets cookies, needs a consent banner).
 - Check it: open the site with `?jtdebug` to log events to the console. Visit `?notrack=1` once to exclude your own browser (`?notrack=0` undoes it). Do Not Track is respected.
 - Events: `session_start` (device, network, referrer), `loader_slow`, `loader_done` (time bucket, `failopen`=1 when the 16 s limit hit), `loader_exit` (progress when they left), `scene_ready`, `fallback_mode` (no 3D),
@@ -90,8 +91,8 @@ The home page needs samurai, scythe, torii and lantern, so those four payloads a
 `src/js/05-scene-main.js` (`WX`): the first rain starts `FIRST_RAIN` (10) seconds after the intro zoom ends and shows a small `雨 · the rain begins` toast once. After that it loops 18 s sakura / 40 s storm. `?storm` previews the storm immediately.
 
 ## Storm details (v25.3)
-- Rain on the glass: `src/js/24-storm-glass.js` + `src/css/09-storm-glass.css` (`#drops` canvas). Droplets bead up and slide during the storm and light up on every lightning strike. Stops itself outside the storm.
-- Lightning also flashes the hero scythe (emissive + a cold glint, `window.__bladeFlash`, see `buildHeroScythe` in `05-scene-main.js`).
+- Rain on the glass: `src/js/24-storm-glass.js` + `src/css/09-storm-glass.css` (`#drops` canvas). Pre-rendered droplet sprites bead up, slide in stop-and-go bursts with trails and tiny beads, and catch the light on every lightning strike. Stops itself outside the storm.
+- Only every 2nd-3rd strike (random) also lights the hero scythe: a cold rim light from behind, computed inside the scythe's own shader so it follows the metal and texture (`window.__bladeFlash` -> `uFl` in `buildHeroScythe`, `05-scene-main.js`). The moon-tap bolt always does.
 - First storm: one short phone vibration (once per visit, via `HAP`).
 - Hidden surprise: tap/click the moon on the home screen. It turns blood red for ~4 s (and calls a bolt during the storm). Tracked as `moon_egg`.
 - `src/public/404.html`: rainy page with a tap-for-lightning moon; respects reduced motion.
