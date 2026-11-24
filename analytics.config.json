@@ -1,5 +1,5 @@
 {
-  "provider": "none",
-  "id": "",
-  "src": ""
+  "provider": "vercel",
+  "id": "auto",
+  "src": "/_vercel/insights/script.js"
 }
