@@ -61,9 +61,9 @@ function init(){
  const gt=glowTex();
  moon=new T.Mesh(new T.CircleGeometry(24,64),new T.MeshBasicMaterial({color:0xd42a3a,fog:false}));scene.add(moon);
  {const mg=new T.PlaneGeometry(89.3,59.5);mg.translate(.81,-3.43,0);/* moon disc (48 wide) centred on the original moon position */
-  new T.TextureLoader().load('data:image/jpeg;base64,'+document.getElementById('bloodMoonData').textContent.trim(),function(tx){tx.minFilter=T.LinearFilter;tx.generateMipmaps=false;
+  window.__jtData('bloodMoonData').then(function(b64){new T.TextureLoader().load('data:image/jpeg;base64,'+b64.trim(),function(tx){tx.minFilter=T.LinearFilter;tx.generateMipmaps=false;
    moon.geometry.dispose();moon.geometry=mg;moon.material.dispose();
-   moon.material=new T.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false})})}
+   moon.material=new T.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false})})})}
  halo=new T.Sprite(new T.SpriteMaterial({map:gt,color:0xff2a3a,blending:T.AdditiveBlending,depthWrite:false,transparent:true,opacity:.3,fog:false}));halo.scale.set(130,130,1);scene.add(halo);
  {const a=new Float32Array(600);for(let i=0;i<200;i++){const t=Math.random()*6.283,p=Math.random()*1.3+.1,r=320;a[i*3]=Math.cos(t)*Math.cos(p)*r;a[i*3+1]=Math.sin(p)*r*.8;a[i*3+2]=Math.sin(t)*Math.cos(p)*r}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(a,3));stars=new T.Points(g,new T.PointsMaterial({size:1.5,sizeAttenuation:false,color:0xcfd8ee,fog:false,transparent:true,opacity:.55}));scene.add(stars)}

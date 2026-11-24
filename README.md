@@ -18,7 +18,8 @@ Cinematic WebGL portfolio (Three.js + GSAP from CDN). Plain HTML/CSS/JS, no fram
 
 ## Commands
     npm run dev           build and serve at http://localhost:3000 (visit /__rebuild after edits)
-    npm run build         production build -> dist/ (single self-contained index.html, CDN libraries)
+    npm run build         production build -> dist/ (lean: small index.html + src/data payloads as cached files in assets/data/, CDN libraries)
+    npm run build:inline  the old single 26 MB index.html -> dist-single/ (what `verify` checks)
     npm run build:split   experimental build -> dist-split/ (external hashed files, self-hosted libraries)
     npm run verify        check the source still equals the baseline
 
@@ -81,3 +82,16 @@ Nothing runs for normal visitors.
 ## Known follow-ups
 Large base64 blobs still live inside src/js/07-audio-engine.js (sound samples) and src/js/06-content-projects.js (project images).
 Moving them to real files would shrink the JS considerably but means changing how they are loaded, so it was left alone.
+
+## Lean loading (v25.1)
+The home page needs samurai, scythe, torii and lantern, so those four payloads are 'eager': they download in parallel from the first moment, the loader bar shows real download progress, and the scene scripts (marked `data-jt-run` in the build) only start once they have arrived. The oni gate and blood moon are lazy (background fetch after the home page is up, via `window.__jtData(id)`). Logic: `src/js/00-data.js`. The loader no longer gives up after 16 s while the download is still progressing (it waits up to 3 min, then falls back to the plain page).
+
+## Weather timing
+`src/js/05-scene-main.js` (`WX`): the first rain starts `FIRST_RAIN` (10) seconds after the intro zoom ends and shows a small `雨 · the rain begins` toast once. After that it loops 18 s sakura / 40 s storm. `?storm` previews the storm immediately.
+
+## Storm details (v25.3)
+- Rain on the glass: `src/js/24-storm-glass.js` + `src/css/09-storm-glass.css` (`#drops` canvas). Droplets bead up and slide during the storm and light up on every lightning strike. Stops itself outside the storm.
+- Lightning also flashes the hero scythe (emissive + a cold glint, `window.__bladeFlash`, see `buildHeroScythe` in `05-scene-main.js`).
+- First storm: one short phone vibration (once per visit, via `HAP`).
+- Hidden surprise: tap/click the moon on the home screen. It turns blood red for ~4 s (and calls a bolt during the storm). Tracked as `moon_egg`.
+- `src/public/404.html`: rainy page with a tap-for-lightning moon; respects reduced motion.

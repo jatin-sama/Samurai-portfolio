@@ -5,8 +5,8 @@
  var geoP=null;
  function getGeo(){
   if(geoP)return geoP;var T=window.THREE;
-  geoP=new Promise(function(res,rej){try{
-   var el=document.getElementById('oniData'),bin=atob(el.textContent.trim()),u=new Uint8Array(bin.length);
+  geoP=window.__jtData('oniData').then(function(b64){return new Promise(function(res,rej){try{
+   var bin=atob(b64.trim()),u=new Uint8Array(bin.length);
    for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
    var dv=new DataView(u.buffer),nv=dv.getUint32(0,true),nt=dv.getUint32(4,true),mn=[],mx=[],k;
    for(k=0;k<3;k++){mn.push(dv.getFloat32(8+k*4,true));mx.push(dv.getFloat32(20+k*4,true))}
@@ -22,7 +22,7 @@
     for(var i=0;i<nt;i++){a+=d[0][i];idx[i*3]=a;idx[i*3+1]=a+d[1][i];idx[i*3+2]=a+d[2][i]}
     var g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('uv',new T.BufferAttribute(uv,2));
     g.setIndex(new T.BufferAttribute(idx,1));g.computeBoundingSphere();g.computeBoundingBox();res(g)}catch(e){rej(e)}},rej);
-  }catch(e){rej(e)}});
+  }catch(e){rej(e)}})});
   return geoP;
  }
  window.__oni=function(o){
@@ -35,7 +35,7 @@
    mat.onBeforeCompile=function(sh){sh.fragmentShader=sh.fragmentShader.replace('#include <map_fragment>',
     '#ifdef USE_MAP\n vec4 tc0=texture2D(map,vUv,-1.1);vec2 px=vec2(.00065);\n vec4 bl=(texture2D(map,vUv+vec2(px.x,0.),-.4)+texture2D(map,vUv-vec2(px.x,0.),-.4)+texture2D(map,vUv+vec2(0.,px.y),-.4)+texture2D(map,vUv-vec2(0.,px.y),-.4))*.25;\n vec4 sampledDiffuseColor=clamp(tc0+(tc0-bl)*.85,0.,1.);diffuseColor*=sampledDiffuseColor;\n#endif')};
    img.onload=function(){tx.needsUpdate=true;mat.map=tx;mat.needsUpdate=true};
-   img.src='data:image/jpeg;base64,'+document.getElementById('oniTex').textContent.trim();
+   window.__jtData('oniTex').then(function(b64){img.src='data:image/jpeg;base64,'+b64.trim()});
    var g=new T.Group(),mesh=new T.Mesh(new T.BufferGeometry(),mat);mesh.frustumCulled=false;g.add(mesh);
    getGeo().then(function(ge){mesh.geometry=ge}).catch(function(e){window.__oniErr=e;try{console.error('oni gate decode failed',e)}catch(x){}});
    var gm=o.glowMap,glows=[];

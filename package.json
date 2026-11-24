@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
+    "build:inline": "node scripts/build.mjs --inline",
     "build:split": "node scripts/build.mjs --split",
     "verify": "node scripts/verify.mjs",
     "dev": "node scripts/dev.mjs"

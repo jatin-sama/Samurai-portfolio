@@ -65,7 +65,7 @@ function init(){
  var endP=P(1),endT=TG(1);
  var moon=new T.Sprite(new T.SpriteMaterial({transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false,opacity:0}));
  moon.center.set(.5-.81/89.3,.5+3.43/59.5);
- new T.TextureLoader().load('data:image/jpeg;base64,'+document.getElementById('bloodMoonData').textContent.trim(),function(tx){tx.minFilter=T.LinearFilter;tx.generateMipmaps=false;moon.material.map=tx;moon.material.opacity=1;moon.material.needsUpdate=true});
+ window.__jtData('bloodMoonData').then(function(b64){new T.TextureLoader().load('data:image/jpeg;base64,'+b64.trim(),function(tx){tx.minFilter=T.LinearFilter;tx.generateMipmaps=false;moon.material.map=tx;moon.material.opacity=1;moon.material.needsUpdate=true})});
  moon.position.set(endP.x+endT.x*60,endP.y+26,endP.z+endT.z*60);moon.scale.set(89.3,59.5,1);scene.add(moon);
  var halo=new T.Sprite(new T.SpriteMaterial({map:glow,color:0xff2a32,blending:T.AdditiveBlending,depthWrite:false,transparent:true,opacity:.42,fog:false}));
  halo.position.copy(moon.position);halo.scale.set(130,130,1);scene.add(halo);

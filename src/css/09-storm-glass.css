@@ -1,0 +1,3 @@
+/* Rain on the glass: drawn by js/24-storm-glass.js, only visible while the storm is on */
+#drops{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block}
+html.nofx #drops,html.rm #drops{display:none}

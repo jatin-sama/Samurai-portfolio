@@ -1,3 +1,45 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>404 — JAMTIN</title>
-<style>html,body{height:100%;margin:0;background:#05070b;color:#efe6d6;font-family:Georgia,serif}body{display:grid;place-items:center;text-align:center}h1{font-weight:500;letter-spacing:.2em;margin:0 0 .5rem;font-size:3rem;color:#e0343f}p{margin:0 0 1.5rem;opacity:.7}a{color:#efe6d6;letter-spacing:.24em;text-transform:uppercase;font:400 .75rem system-ui,sans-serif;border:1px solid #e0343f;padding:.9rem 1.4rem;text-decoration:none}</style></head>
-<body><main><h1>404</h1><p>This path leads nowhere.</p><a href="/">Back to the bridge</a></main></body></html>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><meta name="theme-color" content="#05070b">
+<title>404 — Lost in the rain · JAMTIN</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root{--ink:#05070b;--paper:#efe6d6;--red:#e0343f}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--ink);color:var(--paper);font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+#r{position:fixed;inset:0;width:100%;height:100%}
+.moon{position:fixed;top:9vh;right:12vw;width:min(18vmin,120px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 36%,#f4f7ff,#aab9dc 70%);box-shadow:0 0 80px 18px rgba(130,160,230,.22);opacity:.9;transition:background .6s,box-shadow .6s}
+.moon.red{background:radial-gradient(circle at 38% 36%,#ff7a80,#a3101f 72%);box-shadow:0 0 90px 26px rgba(224,52,63,.4)}
+main{position:relative;z-index:2;min-height:100%;display:grid;place-content:center;text-align:center;padding:2rem calc(1.5rem + env(safe-area-inset-right)) calc(2rem + env(safe-area-inset-bottom)) calc(1.5rem + env(safe-area-inset-left))}
+.k{font:800 clamp(5rem,26vw,11rem)/1 'Shippori Mincho B1','Hiragino Mincho ProN','Yu Mincho',serif;color:rgba(239,230,214,.07);position:absolute;left:50%;top:50%;transform:translate(-50%,-56%);pointer-events:none;user-select:none}
+h1{font-weight:500;letter-spacing:.2em;margin:0 0 .6rem;font-size:clamp(2.6rem,12vw,4.2rem);color:var(--red);text-shadow:0 0 28px rgba(224,52,63,.35)}
+p{margin:0 0 1.8rem;opacity:.75;letter-spacing:.04em}
+.row{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+a{color:var(--paper);letter-spacing:.24em;text-transform:uppercase;font:400 .74rem system-ui,sans-serif;border:1px solid var(--red);padding:.95rem 1.4rem;text-decoration:none;transition:background .25s,transform .25s}
+a:hover,a:focus-visible{background:rgba(224,52,63,.18);outline:none;transform:translateY(-2px)}
+a.g{border-color:rgba(239,230,214,.28)}
+small{display:block;margin-top:1.6rem;opacity:.35;font:400 .68rem system-ui,sans-serif;letter-spacing:.18em}
+#f{position:fixed;inset:0;background:#cfe0ff;opacity:0;pointer-events:none;z-index:3}
+@media (prefers-reduced-motion:reduce){#r,#f{display:none}}
+</style></head>
+<body>
+<canvas id="r" aria-hidden="true"></canvas><div class="moon" id="m" aria-hidden="true"></div><div id="f"></div>
+<main><div class="k" aria-hidden="true">迷</div>
+<h1>404</h1><p>This path leads nowhere.<br>The rain has washed it away.</p>
+<div class="row"><a href="/">Back to the bridge</a><a class="g" href="/#projects">The Arsenal</a></div>
+<small>tap the moon · or anywhere</small></main>
+<script>
+(function(){
+var c=document.getElementById('r'),x=c.getContext('2d'),f=document.getElementById('f'),m=document.getElementById('m'),W,H,D=[],N=matchMedia('(pointer:coarse)').matches?90:170,fl=0;
+function sz(){W=c.width=innerWidth;H=c.height=innerHeight}sz();addEventListener('resize',sz);
+for(var i=0;i<N;i++)D.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,l:10+Math.random()*16,v:620+Math.random()*520,a:.12+Math.random()*.3});
+var t=performance.now();
+(function L(n){var dt=Math.min(.05,(n-t)/1000);t=n;x.clearRect(0,0,W,H);x.lineWidth=1;
+ for(var i=0;i<N;i++){var d=D[i];d.y+=d.v*dt;d.x-=d.v*dt*.18;if(d.y>H){d.y=-20;d.x=Math.random()*(W+120)}
+  x.strokeStyle='rgba(165,190,240,'+d.a+')';x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x+d.l*.18,d.y-d.l);x.stroke()}
+ fl=Math.max(0,fl-dt*2.2);f.style.opacity=(fl*.35).toFixed(3);requestAnimationFrame(L)})(t);
+function bolt(e){fl=1;try{navigator.vibrate&&navigator.vibrate([20,40,30])}catch(x){}
+ if(e&&e.target===m||(e&&e.target.closest&&e.target.closest('#m'))){m.classList.add('red');setTimeout(function(){m.classList.remove('red')},2600)}}
+addEventListener('pointerdown',function(e){if(e.target.closest&&e.target.closest('a'))return;bolt(e)});
+setTimeout(function(){fl=1},1800);
+})();
+</script></body></html>

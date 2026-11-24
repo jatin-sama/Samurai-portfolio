@@ -153,17 +153,17 @@ var low=coarse||(navigator.hardwareConcurrency||8)<=4,NL=low?48:90,leaves=new TH
 for(var i=0;i<NL;i++){ld.push({x:rnd(-12,12),y:rnd(.6,9),z:rnd(-14,6),v:rnd(.12,.34),ph:rnd(0,6.28),f:rnd(.4,1),rx:rnd(-1,1),ry:rnd(-1,1),rz:rnd(-1,1)});leaves.setColorAt(i,col.setHSL(rnd(.93,.99),rnd(.55,.85),rnd(.72,.88)))}
 scene.add(leaves);
 
-/* ---- Weather: 18s of falling sakura, then a 40s storm (rain wall, lightning, thunder), looping ----
-   Edit PETAL_S / STORM_S to change the timing. Add ?storm to the URL to preview the storm straight away. */
+/* ---- Weather: the first rain arrives FIRST_RAIN seconds after the intro zoom ends, then it loops: 18s of falling sakura, 40s storm (rain wall, lightning, thunder) ----
+   Edit FIRST_RAIN / PETAL_S / STORM_S to change the timing. Add ?storm to the URL to preview the storm straight away. */
 var WX=(function(){
- var PETAL_S=18,STORM_S=40,FADE=5,on=!reduce,home=true;
- var cyc=/[?&]storm/.test(location.search)?PETAL_S-1:0,w=0,wasStorm=false,nextStrike=0,strikes=[];
+ var PETAL_S=18,STORM_S=40,FADE=5,FIRST_RAIN=10,on=!reduce,home=true,told=false;
+ var cyc=/[?&]storm/.test(location.search)?PETAL_S-1:Math.max(0,PETAL_S-FIRST_RAIN),w=0,wasStorm=false,nextStrike=0,strikes=[];
  var N=low?900:2200,H=13,pos=new Float32Array(N*6),sd=new Float32Array(N*2),en=new Float32Array(N*2);
  for(var i=0;i<N;i++){var x=rnd(-15,15),y=rnd(0,H),z=rnd(-22,8),r=Math.random();
   for(var k=0;k<2;k++){var q=i*2+k;pos[q*3]=x;pos[q*3+1]=y;pos[q*3+2]=z;sd[q]=r;en[q]=k}}
  var rg=new THREE.BufferGeometry();rg.setAttribute('position',new THREE.BufferAttribute(pos,3));rg.setAttribute('aSeed',new THREE.BufferAttribute(sd,1));rg.setAttribute('aEnd',new THREE.BufferAttribute(en,1));
  var ru={uT:{value:0},uI:{value:0},uSl:{value:.22}};
- var rain=new THREE.LineSegments(rg,new THREE.ShaderMaterial({uniforms:ru,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,vertexShader:'attribute float aSeed;attribute float aEnd;uniform float uT;uniform float uI;uniform float uSl;varying float vA;void main(){float sp=10.+aSeed*7.;float y=mod(position.y-uT*sp,13.);vec3 p=vec3(position.x+y*uSl,y-.3,position.z);float len=.55+aSeed*.7;p+=vec3(uSl,1.,0.)*len*aEnd*.5;vec4 mv=modelViewMatrix*vec4(p,1.);float d=-mv.z;vA=uI*(.10+.32*aSeed)*(1.-.8*aEnd)*smoothstep(48.,8.,d)*smoothstep(.4,2.,d);gl_Position=projectionMatrix*mv;}',fragmentShader:'varying float vA;void main(){gl_FragColor=vec4(.66,.76,.95,vA);}'}));
+ var rain=new THREE.LineSegments(rg,new THREE.ShaderMaterial({uniforms:ru,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,vertexShader:'attribute float aSeed;attribute float aEnd;uniform float uT;uniform float uI;uniform float uSl;varying float vA;void main(){float sp=10.+aSeed*7.;float y=mod(position.y-uT*sp,13.);vec3 p=vec3(position.x+y*uSl,y-.3,position.z);float len=.55+aSeed*.7;p+=vec3(uSl,1.,0.)*len*aEnd*.5;vec4 mv=modelViewMatrix*vec4(p,1.);float d=-mv.z;vA=uI*(.15+.38*aSeed)*(1.-.8*aEnd)*smoothstep(48.,8.,d)*smoothstep(.4,2.,d);gl_Position=projectionMatrix*mv;}',fragmentShader:'varying float vA;void main(){gl_FragColor=vec4(.66,.76,.95,vA);}'}));
  rain.frustumCulled=false;rain.visible=false;rain.renderOrder=6;scene.add(rain);
  /* lightning: rim light from behind, a cool ambient lift, and a glow across the sky */
  var fLight=new THREE.DirectionalLight(0xb4c8ff,0);fLight.position.set(0,10,-14);scene.add(fLight);
@@ -178,18 +178,20 @@ var WX=(function(){
   var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(o),3));
   var grp=new THREE.Group();[[0xffffff,0,1],[0x86a4ff,.14,.5],[0x86a4ff,-.14,.5]].forEach(function(c){var m=new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:c[0],transparent:true,opacity:0,fog:false,depthWrite:false,blending:THREE.AdditiveBlending}));m.position.x=c[1];m.userData.k=c[2];m.frustumCulled=false;grp.add(m)});
   grp.userData.g=g;scene.add(grp);return grp}
- function strike(){var dist=Math.random(),sheet=Math.random()<.25,bx=rnd(-10,10);if(sheet)dist=.6+dist*.4;
-  var S={t:0,bolt:sheet?null:makeBolt(bx),gx:bx,p:[{t0:0,a:1,tau:.09},{t0:.24,a:.55,tau:.13}]};glow.position.x=bx;strikes.push(S);
+ function strike(fd){var dist=fd==null?Math.random():fd,sheet=Math.random()<.25,bx=rnd(-10,10);if(sheet)dist=.6+dist*.4;
+  var S={t:0,bolt:sheet?null:makeBolt(bx),gx:bx,p:[{t0:0,a:1,tau:.09},{t0:.24,a:.55,tau:.13}]};glow.position.x=bx;strikes.push(S);try{document.dispatchEvent(new CustomEvent('jt:strike',{detail:{dist:dist}}))}catch(e){}
   var delay=.3+dist*2.2,name=dist<.3?'thunder3':dist<.65?'thunder2':'thunder1';
   setTimeout(function(){if(window.JSND)JSND.play(name);if(dist<.35&&window.HAP)HAP([20,40,45],0)},delay*1000)}
  function env(S){var f=0;for(var i=0;i<S.p.length;i++){var p=S.p[i],u=S.t-p.t0;if(u>=0)f+=p.a*Math.min(1,u/.02)*Math.exp(-u/p.tau)}return Math.min(1,f)}
  document.addEventListener('portfolio:view',function(e){var d=e.detail||{};home=(d.id==='top'||d.id==='home'||!d.id)&&!d.cs});
+ window.__wxStrike=function(d){if(w>.5)strike(d)};
  return{update:function(dt){
   if(!on)return;
   if(home&&t>=T&&!pause&&!document.hidden){cyc+=dt;if(cyc>=PETAL_S+STORM_S)cyc-=PETAL_S+STORM_S}
   var inStorm=home&&cyc>=PETAL_S&&cyc<PETAL_S+STORM_S;
   w+=((inStorm?1:0)-w)*(1-Math.exp(-dt/(FADE*.4)));if(w<.001)w=0;
-  if(inStorm!==wasStorm){wasStorm=inStorm;if(window.JSND)JSND.storm(inStorm);if(inStorm)nextStrike=cyc+rnd(2.5,4.5)}
+  if(inStorm!==wasStorm){wasStorm=inStorm;if(window.JSND)JSND.storm(inStorm);try{document.dispatchEvent(new CustomEvent('jt:storm',{detail:{on:inStorm}}))}catch(e){}
+   if(inStorm){nextStrike=cyc+rnd(2.5,4.5);if(!told){told=true;try{toast('雨 · the rain begins')}catch(e){}if(window.HAP)HAP([26,60,26,60,110],0)}}}
   /* petals give way to the rain */
   leaves.material.transparent=w>0;leaves.material.opacity=1-w;leaves.visible=w<.995;
   /* rain wall */
@@ -203,7 +205,7 @@ var WX=(function(){
   var f=0;for(var i=strikes.length-1;i>=0;i--){var S=strikes[i];S.t+=dt;var v=env(S);if(v>f)f=v;
    if(S.bolt)S.bolt.children.forEach(function(c){c.material.opacity=Math.min(1,v*1.4)*c.userData.k});
    if(S.t>1.1){if(S.bolt){scene.remove(S.bolt);S.bolt.userData.g.dispose();S.bolt.children.forEach(function(c){c.material.dispose()})}strikes.splice(i,1)}}
-  fLight.intensity=1.7*f;fAmb.intensity=.55*f;glow.material.opacity=.5*f}}
+  fLight.intensity=1.7*f;fAmb.intensity=.55*f;glow.material.opacity=.5*f;window.__wxW=w;window.__bladeFlash=f}}
 })();
 
 /* ---- Ronin (TEMPORARY procedural prototype, not a finished model) ---- */
@@ -307,6 +309,7 @@ function buildHeroScythe(K){
  var rig=new THREE.Group();rig.rotation.order='ZYX';rig.add(model);rig.visible=false;scene.add(rig);
  var gt=glowTex('rgba(255,120,90,.9)','rgba(255,20,30,0)');
  var aura=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xff2a2a,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));aura.position.set(.2,.42,-.12);aura.scale.set(1.5,1.5,1);rig.add(aura);
+ var glint=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex('rgba(255,255,255,1)','rgba(170,200,255,0)'),color:0xdce8ff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));glint.position.set(.12,.58,0);glint.scale.setScalar(.5);rig.add(glint);
  var eyes=(K.meta.eyes||[]).map(function(e){var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xff3322,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));sp.position.set(e[0]-gp[0],e[1]-gp[1],e[2]-gp[2]);sp.scale.setScalar(.0001);rig.add(sp);return sp});
  /* embers: the first NT stream from the samurai to the scythe (the tether), the rest drift up around the blade */
  var NP=coarse?30:46,NT=Math.round(NP*.65),pa=new Float32Array(NP*3),pc=new Float32Array(NP*3),pg=new THREE.BufferGeometry();
@@ -334,6 +337,7 @@ function buildHeroScythe(K){
   rig.rotation.set(0,-.55*(1-e)+.05*Math.sin(t*.5)*(1-e),.08+.12*e+.02*Math.sin(t*.9)*(1-e));
   rig.scale.setScalar(s);
   U.uRv.value=st.rv;U.uRim.value=.35+.85*e;mat.emissiveIntensity=(.45+1.25*e)*(.93+.07*Math.sin(t*23)*Math.sin(t*7));
+  var bf=window.__bladeFlash||0;if(bf>.01){mat.emissiveIntensity+=bf*1.5;U.uRim.value+=bf*1.1;glint.material.opacity=Math.min(1,bf*1.2);glint.scale.setScalar(.5+bf*.9)}else if(glint.material.opacity)glint.material.opacity=0;
   aura.material.opacity=rvN*(.05+.22*e+.03*Math.sin(t*1.3));
   var es=.13*(.15+.9*e)*(1+.15*Math.sin(t*14));eyes.forEach(function(sp){sp.scale.setScalar(Math.max(.0001,es));sp.material.opacity=rvN*Math.min(1,.1+e*1.4)});
   /* embers */
@@ -375,6 +379,28 @@ addEventListener('keydown',function(e){if(e.key==='Escape')skip()});
 $('#enter').addEventListener('click',function(){
  if(go('about'))return;pushT=1;setTimeout(function(){pushT=0},1700)});
 
+/* ---- Hidden surprise: tap/click the moon on the home screen and it turns blood red for a few seconds (and, in a storm, calls a bolt) ---- */
+var EGG=(function(){
+ var home=true,life=0,cnt=0,c0=new THREE.Color(0xdfe7fb),c1=new THREE.Color(0xd42a3a),g0=new THREE.Color(1,1,1),g1=new THREE.Color(1,.18,.24),v=new THREE.Vector3(),v2=new THREE.Vector3(),mc=moon.material.color,gc=moonGlow.material.color;
+ document.addEventListener('portfolio:view',function(e){var d=e.detail||{};home=(d.id==='top'||d.id==='home'||!d.id)&&!d.cs});
+ function hit(x,y){camera.updateMatrixWorld();v.copy(moon.position).project(camera);if(v.z>1)return false;
+  var sx=(v.x+1)/2*innerWidth,sy=(1-v.y)/2*innerHeight;
+  v2.copy(moon.position).add(new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,0).multiplyScalar(4.6)).project(camera);
+  return Math.hypot(x-sx,y-sy)<=Math.max(30,Math.abs((v2.x-v.x)/2*innerWidth)*1.25)}
+ addEventListener('pointerdown',function(e){
+  if(!home||t<T||life>0||window.__scyBusy||reduce)return;
+  if(e.target&&e.target.closest&&e.target.closest('a,button,input,select,textarea,summary,[role=button],[role=tab],.tgt,#ninja,.lbx'))return;
+  if(!hit(e.clientX,e.clientY))return;
+  life=1;cnt++;
+  try{toast(cnt>2?'月 · the moon remembers you':'血月 · the blood moon stirs')}catch(x){}
+  if(window.HAP)HAP([18,40,60],0);if(window.JSND)try{JSND.play('release',{vol:.7})}catch(x){}
+  try{if(window.JT)JT.track('moon_egg',{v:cnt})}catch(x){}
+  if(window.__wxStrike)window.__wxStrike(.4)},{passive:true});
+ return{update:function(dt){if(life<=0)return;life=Math.max(0,life-dt/4);
+  var k=life>.85?(1-life)/.15:life/.85;k=k*k*(3-2*k);mc.copy(c0).lerp(c1,k);gc.copy(g0).lerp(g1,k);
+  var sc=60*(1+.4*k*(1+.15*Math.sin(clk*9)));moonGlow.scale.set(sc,sc,1);
+  if(life===0){mc.copy(c0);gc.copy(g0);moonGlow.scale.set(60,60,1)}}}
+})();
 var pause=false,vo2={x:0,y:0,z:0,cx:0},vt={x:0,y:0,z:0,cx:0};
 document.addEventListener('portfolio:view',function(e){var id=e.detail.id,w=e.detail.wide;vt={x:0,y:0,z:0,cx:0};
  if(id==='about'&&w)vt={x:-.7,y:.1,z:-.5,cx:-2.3};else if(id==='projects')vt={x:0,y:.5,z:3.5,cx:0};else if(id==='skills'&&w)vt={x:.8,y:.1,z:-.3,cx:2.4};else if(id==='experience')vt={x:0,y:.3,z:1.5,cx:0};else if(id==='contact'&&w)vt={x:-1.2,y:-.1,z:-.8,cx:-3};pause=!!e.detail.cs||e.detail.id==='projects'});
@@ -384,6 +410,7 @@ function frame(now){
  requestAnimationFrame(frame);
  var dt=Math.min((now-last)/1000,.05);last=now;clk+=dt;if(window.__ldrT){if(t<window.__ldrT)t=window.__ldrT;window.__ldrT=0}if(t<T&&!window.__ldrHold)t+=dt;if(skipping>0)skipping-=dt;
  if(!uiShown&&t>=5.6){revealUI();uiShown=true}
+ EGG.update(dt);
  var u=sstep((t-.5)/(T-.7));
  tmpP.lerpVectors(startPos,endPos,u);tmpL.lerpVectors(startLook,endLook,u);
  tmpP.x+=Math.sin(u*Math.PI)*-1.2;

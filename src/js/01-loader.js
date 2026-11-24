@@ -8,7 +8,7 @@ var fast=false;try{fast=!!sessionStorage.getItem('jt_ldr')||(location.hash&&loca
 window.__ldrHold=true;setTimeout(function(){window.__ldrHold=false},30000);
 (function(){var h='',i;for(i=0;i<11;i++)h+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--s:'+(5+Math.random()*5).toFixed(1)+'px;--t:'+(7+Math.random()*6).toFixed(1)+'s;--l:-'+(Math.random()*12).toFixed(1)+'s;--dx:'+((Math.random()-.3)*220).toFixed(0)+'px"></i>';L.querySelector('.pts').innerHTML=h})();
 var ST={fonts:0,boot:0,sam:0,frm:0},W={fonts:.15,boot:.2,sam:.5,frm:.15};
-function target(){var t=0,k;for(k in W)t+=W[k]*ST[k];return t}
+function target(){var t=0,k,D=window.__jtDl;for(k in W)t+=W[k]*ST[k];if(D&&!ST.boot&&D.total)t+=W.boot*.9*Math.min(1,D.loaded/D.total);return t}
 try{Promise.race([doc.fonts.load('300 20px Jost'),new Promise(function(r){setTimeout(r,3000)})]).then(function(){ST.fonts=1},function(){ST.fonts=1})}catch(e){ST.fonts=1}
 function allDone(){ST.fonts=ST.boot=ST.sam=ST.frm=1}
 var samSeen=false,held=[];
@@ -16,11 +16,13 @@ var poll=setInterval(function(){
  if(window.__samAB&&!samSeen){samSeen=true;ST.boot=1;
   window.__samAB.then(function(){requestAnimationFrame(function(){requestAnimationFrame(function(){requestAnimationFrame(function(){ST.sam=1;ST.frm=1})})})},function(){ST.sam=1;ST.frm=1})}
  if(root.classList.contains('nofx'))allDone();
- if(performance.now()-T0>16000)allDone()
+ var D=window.__jtDl,now=performance.now();
+ if(D&&!window.__jtRanAt){if(D.failed||now-T0>180000)allDone()}
+ else if(now-(D?window.__jtRanAt:T0)>16000)allDone()
 },60);
 doc.addEventListener('DOMContentLoaded',function(){
  [].forEach.call(body.children,function(el){if(el===L||el.tagName==='SCRIPT'||el.tagName==='STYLE'||el.hasAttribute('inert'))return;el.setAttribute('inert','');held.push(el)});
- setTimeout(function(){if(!window.__samAB)allDone()},700)});
+ setTimeout(function(){if(!window.__samAB&&!window.__jtDl)allDone()},700)});
 function unhold(){held.forEach(function(el){el.removeAttribute('inert')});held=[]}
 var N=doc.getElementById('ldrN'),B=doc.getElementById('ldrBar'),p=0,lastN=-1,lastA=-1,t0=performance.now(),phase=0,minT=fast?300:2200;
 function frame(now){
