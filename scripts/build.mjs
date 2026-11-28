@@ -58,9 +58,15 @@ if (lean) {
     manifest.push({ id: m[2], url: '/' + file, size: Buffer.byteLength(body), eager: !LAZY.has(m[1]) });
   }
 }
+const bins = {};
+if (lean && fs.existsSync(path.join(root, 'src/data/castle.bin.gz'))) { // binary asset: copied as-is (already gzip), fetched lazily by js/04b-model-castle.js
+  const buf = fs.readFileSync(path.join(root, 'src/data/castle.bin.gz'));
+  const file = `assets/data/castle.${crypto.createHash('sha256').update(buf).digest('hex').slice(0, 10)}.bin`;
+  fs.mkdirSync(path.join(outDir, 'assets/data'), { recursive: true }); fs.writeFileSync(path.join(outDir, file), buf); bins.castle = '/' + file;
+}
 let deferring = false; // lean build: every script from the torii model onward waits until the eager data has arrived
 
-const html = template.replace('<!--@datamanifest-->', () => lean ? `<script>window.__JT_DATA=${JSON.stringify(manifest)}</script>` : '').replace('<!--@boot-->', () => lean ? '<script>window.__jtBoot&&window.__jtBoot()</script>' : '').replace('<!--@analytics-->', () => analyticsTag).replace(/<!--@(css|js|data) (\S+?)((?:\s[^]*?)?)-->/g, (_, kind, rel, attrs) => {
+const html = template.replace('<!--@datamanifest-->', () => lean ? `<script>window.__JT_DATA=${JSON.stringify(manifest)};window.__JT_BIN=${JSON.stringify(bins)}</script>` : '').replace('<!--@boot-->', () => lean ? '<script>window.__jtBoot&&window.__jtBoot()</script>' : '').replace('<!--@analytics-->', () => analyticsTag).replace(/<!--@(css|js|data) (\S+?)((?:\s[^]*?)?)-->/g, (_, kind, rel, attrs) => {
   if (kind === 'data') {
     if (lean) return `<script type="text/plain"${attrs}></script>`;
     if (!split) return `<script type="text/plain"${attrs}>${read(rel)}</script>`;

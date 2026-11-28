@@ -96,3 +96,10 @@ The home page needs samurai, scythe, torii and lantern, so those four payloads a
 - First storm: one short phone vibration (once per visit, via `HAP`).
 - Hidden surprise: tap/click the moon on the home screen. It turns blood red for ~4 s (and calls a bolt during the storm). Tracked as `moon_egg`.
 - `src/public/404.html`: rainy page with a tap-for-lightning moon; respects reduced motion.
+
+## Castle at the end of Projects (v27)
+- `src/data/castle.bin.gz` (4.7 MB): the supplied Tripo castle. Blank gray deck/platform areas repainted (stone slabs / timber planks from the model's own palette), 2048px texture, 16-bit positions, 8-bit normals, delta-coded indices, gzip. Same 297k vertices / 502k triangles as the original 16 MB file.
+- `src/js/04b-model-castle.js`: `window.__castle({scale,sil,lights,...})` loads it lazily (prefetched ~9 s after the home page on good connections; skipped on very low-memory devices). `sil` = dark moonlit silhouette shader (red rim light, mist-faded base), `lights` = warm window/lantern lights.
+- `src/js/04c-projects-backdrop.js`: `window.__projBackdrop(THREE,{glow})`: three mountain ridges (pines, moon-lit crest), mist bands, village lights and crows crossing the moon. Camera-relative, procedural.
+- `src/js/15-projects-crossing.js`: the backdrop rides with the camera; the castle (scale 52, 135 units away, centred in front of the moon) fades up out of the mist as you reach the Oni gate (`rvv`), lightning flashes light its rim (`fl`). Ridges fade in over the whole page (`kk`).
+- Build: the lean build copies the castle to `assets/data/castle.<hash>.bin` and exposes `window.__JT_BIN.castle`. The single-file `--inline` build has no castle (the backdrop still works).

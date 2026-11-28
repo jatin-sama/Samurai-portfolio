@@ -19,7 +19,7 @@ const n=P.length,m=n+2,S=24,zB=i=>-(i+1)*S,zR=zB(n-1)-34,stops=[0,...P.map((_,i)
 $('pbh2').textContent=(NUM[n]||n)+' builds. One crossing.';
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),sm=t=>{t=clamp(t,0,1);return t*t*(3-2*t)};
 const SERIF='"Cormorant Garamond","Hoefler Text",Georgia,serif',SANS='Jost,"Helvetica Neue",Arial,sans-serif',CJK='"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif';
-let renderer,scene,cam,lamp,moon,halo,stars,water,gateGlow,fog0,B=[],PP=[],lg,lp,ls,eg,ep,es,ronin,rgl,fov0=55,LN=70,EN=420;
+let renderer,scene,cam,lamp,moon,halo,stars,water,gateGlow,fog0,bd,castleG,fl=0,nextFl=6,B=[],PP=[],lg,lp,ls,eg,ep,es,ronin,rgl,fov0=55,LN=70,EN=420;
 let ready=false,building=false,on=false,running=false,raf=0,act=-1,cur=0,tgt=0,mx=0,my=0,pz=0,dist=0,pulse=0,prevZ=0,hoverI=-1;
 const tmp=new T.Vector3(),bp=new T.Vector3(),accC=P.map(p=>new T.Color(p.c)),base=new T.Color(0xffa862),tc=new T.Color();
 const span=()=>Math.max(1,track.offsetHeight-panel.clientHeight);
@@ -65,6 +65,9 @@ function init(){
    moon.geometry.dispose();moon.geometry=mg;moon.material.dispose();
    moon.material=new T.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false})})})}
  halo=new T.Sprite(new T.SpriteMaterial({map:gt,color:0xff2a3a,blending:T.AdditiveBlending,depthWrite:false,transparent:true,opacity:.3,fog:false}));halo.scale.set(130,130,1);scene.add(halo);
+ /* the far scene: mountain ridges, mist, village lights, crows, and the castle in front of the moon */
+ bd=window.__projBackdrop?window.__projBackdrop(T,{glow:gt}):null;if(bd)scene.add(bd.group);
+ if(bd&&window.__castle&&window.__RM!==true){window.__castle({scale:52,sil:{dark:0x383a50,rim:0xff3a48,mist:0x22162a,rimK:1.5},lights:true}).then(function(g){if(!g||!scene||!bd)return;castleG=g;g.position.set(0,-7,-135);g.visible=false;bd.group.add(g)}).catch(function(){})}
  {const a=new Float32Array(600);for(let i=0;i<200;i++){const t=Math.random()*6.283,p=Math.random()*1.3+.1,r=320;a[i*3]=Math.cos(t)*Math.cos(p)*r;a[i*3+1]=Math.sin(p)*r*.8;a[i*3+2]=Math.sin(t)*Math.cos(p)*r}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(a,3));stars=new T.Points(g,new T.PointsMaterial({size:1.5,sizeAttenuation:false,color:0xcfd8ee,fog:false,transparent:true,opacity:.55}));scene.add(stars)}
  water=new T.Mesh(new T.PlaneGeometry(260,420),new T.ShaderMaterial({uniforms:{uTime:{value:0}},
@@ -162,7 +165,10 @@ function tick(ts){if(!running)return;raf=requestAnimationFrame(tick);const t=ts/
   b.sw.rotation.z=reduce?0:Math.sin(t*1.1+i*2)*.035;b.sw.rotation.x=reduce?0:Math.sin(t*.8+i)*.02;
   b.paper.scale.y=u;b.paper.position.y=-1.8*u;b.r2.position.y=-3.6*u;   /* the scroll unfurls as you approach */
   b.mat.color.setScalar(.5+.5*k+(hoverI===i?.18:0));b.hl.material.opacity=.4*k+(hoverI===i?.12:0)});
- const fd=clamp((zR+12-z)/20,0,1);fade.style.opacity=fd;gateGlow.material.opacity=.25+.55*clamp(1-(z-zR)/60,0,1);if(window.__oniG&&window.__oniG.userData.pulse)window.__oniG.userData.pulse(performance.now()/1000);halo.material.opacity=.3+.4*fd+pulse*.15;
+ if(bd){const kk=.4+.6*sm(cur/(m-1)),rvv=castleG?sm(clamp(1-(z-zR)/80,0,1)):0;if(!reduce&&t>nextFl){fl=1;nextFl=t+6+Math.random()*7}fl=Math.max(0,fl-.04);
+  bd.group.position.set(0,0,z);bd.update(t,kk,rvv,fl);
+  if(castleG){castleG.visible=rvv>.003;castleG.userData.set(rvv);castleG.position.y=-7-8*(1-rvv);castleG.userData.flash(fl);if(castleG.userData.flick)castleG.userData.flick(t,rvv)}}
+ const fd=clamp((zR+12-z)/20,0,1);fade.style.opacity=fd;gateGlow.material.opacity=.25+.55*clamp(1-(z-zR)/60,0,1);if(window.__oniG&&window.__oniG.userData.pulse)window.__oniG.userData.pulse(performance.now()/1000);halo.material.opacity=.3+.4*fd+pulse*.15+fl*.22;
  if(ronin){ronin.scale.y=1+(reduce?0:Math.sin(t*1.3)*.006);rgl.material.opacity=.3+.12*Math.sin(t*2.2)}
  for(let i=0;i<LN;i++){const s=ls[i],rel=((s.z-z)%70+70)%70-62;lp[i*3]=s.x+Math.sin(t*.4+s.p)*.6;lp[i*3+1]=2.5+(s.y+(reduce?0:t*s.v))%14;lp[i*3+2]=z+rel}
  lg.attributes.position.needsUpdate=true;
